@@ -15,3 +15,12 @@ typedef struct _stats{
     int MTVs
     int MMONEYs
 } stats;
+
+typedef struct _game {
+    int turnNumber; 
+    int whoseTurn;
+    int currentDice;
+    stats PlayerA;
+    stats PlayerB;
+    stats PlayerC;
+}
