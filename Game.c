@@ -1,13 +1,19 @@
-
+//assumed that action is legal
 makeAction(Game g, action a) {
    int currPlayer = getWhoseTurn(g);
    
    if(a.actionCode == BUILD_CAMPUS) {
-      //some code here
+      //the campus type must be normal
+      //needs to record new campus location
+      //point out owner of campus
+      //increase the number of campuses 
    
    
    } else if (a.actionCode == BUILD_G08) {
-      //some code here
+      //the campus type must be G08
+      //needs to record new campus location
+      //point out owner of campus
+      //increase the number of G08 campuses
    
    
    
