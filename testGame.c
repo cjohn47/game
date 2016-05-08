@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "game.h"
+#include "Game.h"
 
 #define DEFAULT_DISCIPLINES {STUDENT_BQN, STUDENT_MMONEY, STUDENT_MJ, \
                 STUDENT_MMONEY, STUDENT_MJ, STUDENT_BPS, STUDENT_MTV, \
@@ -90,7 +90,7 @@ void testDisposeGame(){
 }
 
 void testGets() {
-  Game testGame;
+  Game g;
   int disciplines[] = DEFAULT_DISCIPLINES;
   int dice[] = DEFAULT_DICE;
   
@@ -134,7 +134,7 @@ void testGets() {
 }  
 
 void testIsLegal() {
-  Game testGame;
+  Game g;
   int disciplines[] = DEFAULT_DISCIPLINES;
   int dice[] = DEFAULT_DICE;
   
