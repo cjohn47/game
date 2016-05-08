@@ -2,10 +2,14 @@
 #include <stdlib.h>
 #include "game.h"
 
+//For vertices and arcs
 #define MAX_VERTICES 6
 #define MAX_ROWS 12
 #define MAX_ARCS_PER_ROW 8
 
+//For regions
+#define MAX_REGION_ROWS 9
+#define MAX_REGION_COLUMNS 3
 
 
 
@@ -57,6 +61,10 @@ typedef struct _game {
     */
     int boardArcs[MAX_ROWS][MAX_ACRS_PER_ROW]
     
+    /*2D array whihc stores the 
+    //constents of the regions
+    */
+    int boardRegions[MAX_REGION_ROWS][MAX_REGION_COLUMNS];
     
     stats PlayerA;
     stats PlayerB;
