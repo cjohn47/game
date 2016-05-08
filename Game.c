@@ -66,7 +66,5 @@ typedef struct _game {
     */
     int boardRegions[MAX_REGION_ROWS][MAX_REGION_COLUMNS];
     
-    stats PlayerA;
-    stats PlayerB;
-    stats PlayerC;
+    stats University[NUM_UNIS];
 } game;
