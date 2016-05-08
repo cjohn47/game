@@ -17,9 +17,9 @@ typedef struct _stats{
     int KPIs;
     int Campuses;
     int Group;
-    int ARC Grants;
+    int ARCGrants;
     int Patents;
-    int Papers
+    int Papers;
     int THDs;
     int BPSs;
     int BQNs;
@@ -54,12 +54,12 @@ typedef struct _game {
     //for rows 1 and 9 if [vertex] > 3 then the point is outside the board
     //
     */
-    int boardVertices[MAX_ROWS]{MAX_VERTICES];
+    int boardVertices[MAX_ROWS][MAX_VERTICES];
     
     /*2 dimensional array of the
     //form [row][arc] conataining the contents of the arc.
     */
-    int boardArcs[MAX_ROWS][MAX_ACRS_PER_ROW]
+    int boardArcs[MAX_ROWS][MAX_ARCS_PER_ROW];
     
     /*2D array whihc stores the 
     //constents of the regions
@@ -69,5 +69,4 @@ typedef struct _game {
     stats PlayerA;
     stats PlayerB;
     stats PlayerC;
-}
-
+} game;
