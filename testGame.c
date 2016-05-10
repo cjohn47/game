@@ -14,8 +14,25 @@
 
 void testNewGame(void);
 void testDisposeGame(void);
-void testGets(void);
-void testIsLegal(void);
+void testMakeAction(void);
+void testThrowDice(void);
+void testGetDiscipline(void);
+void testGetDiceValue(void);
+void testGetMostARCs(void);
+void testGetMostPublications(void);
+void testGetTurnNumber(void);
+void testGetWhoseTurn(void);
+void testGetCampus(void);
+void testGetARC(void);
+void testIsLegalAction(void);
+void testGetKPIpoints(void);
+void testGetARCs(void);
+void testGetGO8s(void);
+void testGetCampuses(void);
+void testGetIPs(void);
+void testGetPublications(void);
+void testGetStudents(void);
+void testGetExchangeRate(void);
 
 int main(int argc, char *argv[]){
   testNewGame();
@@ -40,6 +57,7 @@ int main(int argc, char *argv[]){
   testGetStudents();
   testGetExchangeRate();
   
+  printf("All tests passed!\n");
   return EXIT_SUCCESS;
 }
 
@@ -54,14 +72,103 @@ void testNewGame(void){
   assert(getWhoseTurn(testGame) == 0);  
 }
 
-void testDisposeGame(){
+void testDisposeGame(void){
   Game testGame = newGame;
   dispose(testGame);
   
   assert(testGame == NULL)
 }
 
-void testGets() {
+void testMakeAction(void){
+  
+}
+
+void testThrowDice(void){
+  
+}
+
+void testGetDiscipline(void){
+  
+}
+
+void testGetDiceValue(void){
+  
+}
+
+void testGetMostARCs(void){
+  
+}
+
+void testGetMostPublications(void){
+  
+}
+
+void testGetTurnNumber(void){
+  
+}
+
+void testGetWhoseTurn(void){
+  
+}
+
+void testGetCampus(void){
+  
+}
+
+void testGetARC(void){
+  
+}
+
+void testIsLegalAction() {
+  Game g;
+  int disciplines[] = DEFAULT_DISCIPLINES;
+  int dice[] = DEFAULT_DICE;
+  
+  newGame(disciplines, dice);
+  
+   assert (isLegalAction(Game g, OBTAIN_IP_PATENT) == FALSE);
+   assert (isLegalAction(Game g, PASS) == TRUE);
+   assert (isLegalAction(Game g, RETRAIN_STUDENTS) == FALSE);
+   assert (isLegalAction(Game g, BUILD_CAMPUS) == FALSE);
+   assert (isLegalAction(Game g, OBTAIN_PUBLICATION) == FALSE);
+   assert (isLegalAction(Game g, START_SPINOFF) == FALSE);
+   assert (isLegalAction(Game g, OBTAIN_ARC) == FALSE);
+   assert (isLegalAction(Game g, BUILD_GO8) == FALSE);
+}
+
+void testGetKPIpoints(void){
+  
+}
+
+void testGetARCs(void){
+  
+}
+
+void testGetGO8s(void){
+  
+}
+
+void testGetCampuses(void){
+  
+}
+
+void testGetIPs(void){
+  
+}
+
+void testGetPublications(void){
+  
+}
+
+void testGetStudents(void){
+  
+}
+
+void testGetExchangeRate(void){
+  
+}
+
+/* void testGets() {
   Game g;
   int disciplines[] = DEFAULT_DISCIPLINES;
   int dice[] = DEFAULT_DICE;
@@ -104,21 +211,7 @@ void testGets() {
 
    assert(getMostPublications(Game g) == NO_ONE);
 }  
+*/
 
-void testIsLegal() {
-  Game g;
-  int disciplines[] = DEFAULT_DISCIPLINES;
-  int dice[] = DEFAULT_DICE;
-  
-  newGame(disciplines, dice);
-  
-   assert (isLegalAction(Game g, OBTAIN_IP_PATENT) == FALSE);
-   assert (isLegalAction(Game g, PASS) == TRUE);
-   assert (isLegalAction(Game g, RETRAIN_STUDENTS) == FALSE);
-   assert (isLegalAction(Game g, BUILD_CAMPUS) == FALSE);
-   assert (isLegalAction(Game g, OBTAIN_PUBLICATION) == FALSE);
-   assert (isLegalAction(Game g, START_SPINOFF) == FALSE);
-   assert (isLegalAction(Game g, OBTAIN_ARC) == FALSE);
-   assert (isLegalAction(Game g, BUILD_GO8) == FALSE);
-}
+
 
