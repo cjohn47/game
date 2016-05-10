@@ -12,51 +12,6 @@
 
 #define NUM_UNIS 3
 
-// player ID of each university
-#define NO_ONE 0
-#define UNI_A 1
-#define UNI_B 2
-#define UNI_C 3
-
-// contents of an ARC
-#define VACANT_ARC 0
-#define ARC_A 1
-#define ARC_B 2
-#define ARC_C 3
-
-// contents of a VERTEX
-#define VACANT_VERTEX 0  
-#define CAMPUS_A 1
-#define CAMPUS_B 2
-#define CAMPUS_C 3
-#define GO8_A 4
-#define GO8_B 5
-#define GO8_C 6
-
-// action codes
-#define PASS 0
-#define BUILD_CAMPUS 1
-#define BUILD_GO8 2
-#define OBTAIN_ARC 3
-#define START_SPINOFF 4
-#define OBTAIN_PUBLICATION 5
-#define OBTAIN_IP_PATENT 6
-#define RETRAIN_STUDENTS 7
-
-// disciplines
-#define STUDENT_THD 0
-#define STUDENT_BPS 1
-#define STUDENT_BQN 2
-#define STUDENT_MJ  3
-#define STUDENT_MTV 4
-#define STUDENT_MMONEY 5
-
-#define NUM_REGIONS 19
-#define PATH_LIMIT 150
-
-#define TRUE 1
-#define FALSE 0
-
 void testNewGame(void);
 void testDisposeGame(void);
 void testGets(void);
@@ -65,9 +20,25 @@ void testIsLegal(void);
 int main(int argc, char *argv[]){
   testNewGame();
   testDisposeGame();
-  testGets();
-  testIsLegal();
   testMakeAction();
+  testThrowDice();
+  testGetDiscipline();
+  testGetDiceValue();
+  testGetMostARCs();
+  testGetMostPublications();
+  testGetTurnNumber();
+  testGetWhoseTurn();
+  testGetCampus();
+  testGetARC();
+  testIsLegalAction();
+  testGetKPIpoints();
+  testGetARCs();
+  testGetGO8s();
+  testGetCampuses();
+  testGetIPs();
+  testGetPublications();
+  testGetStudents();
+  testGetExchangeRate();
   
   return EXIT_SUCCESS;
 }
