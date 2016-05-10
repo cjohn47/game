@@ -4,7 +4,7 @@
 
 //For vertices and arcs
 #define MAX_VERTICES 6
-#define MAX_ROWS 12
+#define MAX_ROWS 11
 #define MAX_ARCS_PER_ROW 8
 
 //For regions
@@ -68,3 +68,8 @@ typedef struct _game {
     
     stats University[NUM_UNIS];
 } game;
+
+
+
+
+
