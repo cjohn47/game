@@ -80,138 +80,201 @@ void testDisposeGame(void){
 }
 
 void testMakeAction(void){
+  Game testGame;
+  int disciplines[] = DEFAULT_DISCIPLINES;
+  int dice[] = DEFAULT_DICE;
   
+  newGame(disciplines, dice);
 }
 
 void testThrowDice(void){
+  Game testGame;
+  int disciplines[] = DEFAULT_DISCIPLINES;
+  int dice[] = DEFAULT_DICE;
   
+  newGame(disciplines, dice);
 }
 
 void testGetDiscipline(void){
+  Game testGame;
+  int disciplines[] = DEFAULT_DISCIPLINES;
+  int dice[] = DEFAULT_DICE;
   
+  newGame(disciplines, dice);
 }
 
 void testGetDiceValue(void){
+  Game testGame;
+  int disciplines[] = DEFAULT_DISCIPLINES;
+  int dice[] = DEFAULT_DICE;
   
+  newGame(disciplines, dice);
+  
+  assert (getDiceValue(Game testGame, 1) == 9);
+  assert (getDiceValue(Game testGame, 2) == 10);
+  assert (getDiceValue(Game testGame, 3) == 8);
+  assert (getDiceValue(Game testGame, 4) == 12);
+  assert (getDiceValue(Game testGame, 5) == 6);
+  assert (getDiceValue(Game testGame, 6) == 5);
+  assert (getDiceValue(Game testGame, 7) == 3);
+  assert (getDiceValue(Game testGame, 8) == 11);
+  assert (getDiceValue(Game testGame, 9) == 3);
+  assert (getDiceValue(Game testGame, 10) == 11);
+  assert (getDiceValue(Game testGame, 11) == 4);
+  assert (getDiceValue(Game testGame, 12) == 6);
+  assert (getDiceValue(Game testGame, 13) == 4);
+  assert (getDiceValue(Game testGame, 14) == 7);
+  assert (getDiceValue(Game testGame, 15) == 9);
+  assert (getDiceValue(Game testGame, 16) == 2);
+  assert (getDiceValue(Game testGame, 17) == 8);
+  assert (getDiceValue(Game testGame, 18) == 10);
+  assert (getDiceValue(Game testGame, 19) == 5);
 }
 
 void testGetMostARCs(void){
+  Game testGame;
+  int disciplines[] = DEFAULT_DISCIPLINES;
+  int dice[] = DEFAULT_DICE;
   
+  newGame(disciplines, dice);
+  
+  assert (getMostARCs(Game testGame) == NO_ONE);
 }
 
 void testGetMostPublications(void){
+  Game testGame;
+  int disciplines[] = DEFAULT_DISCIPLINES;
+  int dice[] = DEFAULT_DICE;
   
+  newGame(disciplines, dice);
 }
 
 void testGetTurnNumber(void){
+  Game testGame;
+  int disciplines[] = DEFAULT_DISCIPLINES;
+  int dice[] = DEFAULT_DICE;
   
+  newGame(disciplines, dice);
+  
+  assert (getTurnNumber(Game testGame) == -1);
 }
 
 void testGetWhoseTurn(void){
+  Game testGame;
+  int disciplines[] = DEFAULT_DISCIPLINES;
+  int dice[] = DEFAULT_DICE;
   
+  newGame(disciplines, dice);
+  
+  assert (getWhoseTurn(Game testGame) == NO_ONE);
 }
 
 void testGetCampus(void){
+  Game testGame;
+  int disciplines[] = DEFAULT_DISCIPLINES;
+  int dice[] = DEFAULT_DICE;
   
+  newGame(disciplines, dice);
 }
 
 void testGetARC(void){
+  Game testGame;
+  int disciplines[] = DEFAULT_DISCIPLINES;
+  int dice[] = DEFAULT_DICE;
   
+  newGame(disciplines, dice);
 }
 
 void testIsLegalAction() {
-  Game g;
+  Game testGame;
   int disciplines[] = DEFAULT_DISCIPLINES;
   int dice[] = DEFAULT_DICE;
   
   newGame(disciplines, dice);
   
-   assert (isLegalAction(Game g, OBTAIN_IP_PATENT) == FALSE);
-   assert (isLegalAction(Game g, PASS) == TRUE);
-   assert (isLegalAction(Game g, RETRAIN_STUDENTS) == FALSE);
-   assert (isLegalAction(Game g, BUILD_CAMPUS) == FALSE);
-   assert (isLegalAction(Game g, OBTAIN_PUBLICATION) == FALSE);
-   assert (isLegalAction(Game g, START_SPINOFF) == FALSE);
-   assert (isLegalAction(Game g, OBTAIN_ARC) == FALSE);
-   assert (isLegalAction(Game g, BUILD_GO8) == FALSE);
+  assert (isLegalAction(Game testGame, OBTAIN_IP_PATENT) == FALSE);
+  assert (isLegalAction(Game testGame, PASS) == TRUE);
+  assert (isLegalAction(Game testGame, RETRAIN_STUDENTS) == FALSE);
+  assert (isLegalAction(Game testGame, BUILD_CAMPUS) == FALSE);
+  assert (isLegalAction(Game testGame, OBTAIN_PUBLICATION) == FALSE);
+  assert (isLegalAction(Game testGame, START_SPINOFF) == FALSE);
+  assert (isLegalAction(Game testGame, OBTAIN_ARC) == FALSE);
+  assert (isLegalAction(Game testGame, BUILD_GO8) == FALSE);
 }
 
 void testGetKPIpoints(void){
+  Game testGame;
+  int disciplines[] = DEFAULT_DISCIPLINES;
+  int dice[] = DEFAULT_DICE;
   
+  newGame(disciplines, dice);
 }
 
 void testGetARCs(void){
+  Game testGame;
+  int disciplines[] = DEFAULT_DISCIPLINES;
+  int dice[] = DEFAULT_DICE;
   
+  newGame(disciplines, dice);
 }
 
 void testGetGO8s(void){
+  Game testGame;
+  int disciplines[] = DEFAULT_DISCIPLINES;
+  int dice[] = DEFAULT_DICE;
   
+  newGame(disciplines, dice);
 }
 
 void testGetCampuses(void){
-  
-}
-
-void testGetIPs(void){
-  
-}
-
-void testGetPublications(void){
-  
-}
-
-void testGetStudents(void){
-  
-}
-
-void testGetExchangeRate(void){
-  
-}
-
-/* void testGets() {
-  Game g;
+  Game testGame;
   int disciplines[] = DEFAULT_DISCIPLINES;
   int dice[] = DEFAULT_DICE;
   
   newGame(disciplines, dice);
   
-  assert (getMostARCs(Game g) == NO_ONE);
+  assert (getCampus(Game testGame, "RR") == VACANT_VERTEX);
+  assert (getCampus(Game testGame, "RRL") == VACANT_VERTEX);
+  assert (getCampus(Game testGame, "LL") == VACANT_VERTEX);
+  assert (getCampus(Game testGame, "LLR") == VACANT_VERTEX);
+  assert (getCampus(Game testGame, "RRLL") == VACANT_VERTEX);
+  assert (getCampus(Game testGame, "RLLL") == VACANT_VERTEX);
+  assert (getCampus(Game testGame, "RB") == CAMPUS_A);
+}
 
-   assert (getDiceValue(Game g, 1) == 9);
-   assert (getDiceValue(Game g, 2) == 10);
-   assert (getDiceValue(Game g, 3) == 8);
-   assert (getDiceValue(Game g, 4) == 12);
-   assert (getDiceValue(Game g, 5) == 6);
-   assert (getDiceValue(Game g, 6) == 5);
-   assert (getDiceValue(Game g, 7) == 3);
-   assert (getDiceValue(Game g, 8) == 11);
-   assert (getDiceValue(Game g, 9) == 3);
-   assert (getDiceValue(Game g, 10) == 11);
-   assert (getDiceValue(Game g, 11) == 4);
-   assert (getDiceValue(Game g, 12) == 6);
-   assert (getDiceValue(Game g, 13) == 4);
-   assert (getDiceValue(Game g, 14) == 7);
-   assert (getDiceValue(Game g, 15) == 9);
-   assert (getDiceValue(Game g, 16) == 2);
-   assert (getDiceValue(Game g, 17) == 8);
-   assert (getDiceValue(Game g, 18) == 10);
-   assert (getDiceValue(Game g, 19) == 5);
-   
-   assert (getTurnNumber(Game g) == -1);
+void testGetIPs(void){
+  Game testGame;
+  int disciplines[] = DEFAULT_DISCIPLINES;
+  int dice[] = DEFAULT_DICE;
+  
+  newGame(disciplines, dice);
+}
 
-   assert (getWhoseTurn(Game g) == NO_ONE);
+void testGetPublications(void){
+  Game testGame;
+  int disciplines[] = DEFAULT_DISCIPLINES;
+  int dice[] = DEFAULT_DICE;
+  
+  newGame(disciplines, dice);
+  
+  assert(getMostPublications(Game testGame) == NO_ONE);
+}
 
-   assert (getCampus(Game g, "RR") == VACANT_VERTEX);
-   assert (getCampus(Game g, "RRL") == VACANT_VERTEX);
-   assert (getCampus(Game g, "LL") == VACANT_VERTEX);
-   assert (getCampus(Game g, "LLR") == VACANT_VERTEX);
-   assert (getCampus(Game g, "RRLL") == VACANT_VERTEX);
-   assert (getCampus(Game g, "RLLL") == VACANT_VERTEX);
-   assert (getCampus(Game g, "RB") == CAMPUS_A);
+void testGetStudents(void){
+  Game testGame;
+  int disciplines[] = DEFAULT_DISCIPLINES;
+  int dice[] = DEFAULT_DICE;
+  
+  newGame(disciplines, dice);
+}
 
-   assert(getMostPublications(Game g) == NO_ONE);
-}  
-*/
+void testGetExchangeRate(void){
+  Game testGame;
+  int disciplines[] = DEFAULT_DISCIPLINES;
+  int dice[] = DEFAULT_DICE;
+  
+  newGame(disciplines, dice);
+}
 
 
 
