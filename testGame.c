@@ -67,6 +67,7 @@ int main(int argc, char *argv[]){
   testDisposeGame();
   testGets();
   testIsLegal();
+  testMakeAction();
   
   return EXIT_SUCCESS;
 }
