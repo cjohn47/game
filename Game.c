@@ -111,7 +111,8 @@ Game newGame(int discipline[], int dice[]){
     new->turnNumber = 0;
 
     new->whoseTurn = NO_ONE;
-
+    
+    //initialising stats
     int uniCount = 0;
     while (uniCount < NUM_UNIS){
 	new->University[uniCount].KPIs = 0;
@@ -131,7 +132,7 @@ Game newGame(int discipline[], int dice[]){
     }
     
 
-    
+    //initialising the gameboard
     columnCount = 0;
     while (columnCount < MAX_COLUMNS){
 	rowCount = 0;    
@@ -156,7 +157,7 @@ Game newGame(int discipline[], int dice[]){
    
     //initialising the starting positions for each uni.
     new->boardVertices[3][0] = UNI_A;
-    new->boardVertices[4][11] = UNI_A;
+    new->boardVertices[4][10] = UNI_A;
     new->boardVertices[0][1] = UNI_B;
     new->boardVertices[5][5] = UNI_B;
     new->boardVertices[0][6] = UNI_C;
