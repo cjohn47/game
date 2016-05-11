@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "game.h"
+#include "Game.h"
 
 //For vertices and arcs
 #define MAX_VERTICES 6
