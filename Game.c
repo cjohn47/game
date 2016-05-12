@@ -190,15 +190,56 @@ int getDiscipline (Game g, int regionID);
 
 int getDiceValue (Game g, int regionID);
 
-int getMostARCs (Game g);
+int getMostARCs (Game g) {
+    int university = -1;
+    int NUM_ARCS = 0;
+    int i = 0;
+    
+    while (i<NUM_UNIS) {
+        if (g-> university[i] . ARCGrants > NUM_ARCS) {
+            university = i;
+        } else if (NUM_ARCS == (g-> university[i] . ARCGrants)) {
+            university = -1;
+        }
+        i++;
+    }
+    return university;
+}
 
-int getMostPublications (Game g);
+int getMostPublications (Game g) {
+    int university = -1;
+    int NUM_PUBS = 0;
+    int i = 0;
+    
+    while (i<NUM_UNIS) {
+        if ((g-> university[i] . papers + g-> university[i] . patents) > NUM_PUBS) {
+            university = i;
+        }
+        else if (NUM_PUBS == (g-> university[i] . papers + g-> university[i] . patents)) {
+            university = -1;
+        }
+        i++;
+    }
+    return university;
+}
 
-int getTurnNumber (Game g);
+int getTurnNumber (Game g){
+    return g -> turnNumber;
+}
 
-int getWhoseTurn (Game g);
+int getWhoseTurn (Game g) {
+    return g -> whoseTurn;
+}
 
-int getCampus(Game g, path pathToVertex);
+int getCampuses(Game g, int player) {
+    int university = -1;
+    int i = 0;
+    
+    if (i<NUM_UNIS) {
+        return g-> university[i] . Campuses
+    }
+    i++;
+}
 
 int getARC(Game g, path pathToEdge);
 
@@ -543,9 +584,26 @@ int isLegalAction (Game g, action a) {
   }
 }
 
-int getKPIpoints (Game g, int player);
+int getKPIpoints (Game g, int player){
+    int university = -1;
+    int i = 0;
+    
+    if (i<NUM_UNIS) {
+        return g-> university[i] . KPIs
+    }
+    i++
+}
 
-int getARCs (Game g, int player);
+
+int getARCs (Game g, int player){
+    int university = -1;
+    int i = 0;
+    
+    if (i<NUM_UNIS) {
+        return g-> university[i] . ARCGrants
+    }
+    i++;
+}
 
 int getARCs (Game g, int player);
 
@@ -555,7 +613,15 @@ int getCampuses (Game g, int player);
 
 int getIPs (Game g, int player);
 
-int getPublications (Game g, int player);
+int getPublications (Game g, int player) {
+    int university = -1;
+    int i = 0;
+    
+    if (i<NUM_UNIS) {
+        return (g-> university[i] . Patents + g-> university[i].Papers)
+    }
+    i++;
+}
 
 int getStudents (Game g, int player, int discipline);
 
