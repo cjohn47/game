@@ -540,6 +540,7 @@ int isLegalAction (Game g, action a) {
    }
 
    return isLegal;
+  }
 }
 
 int getKPIpoints (Game g, int player);
