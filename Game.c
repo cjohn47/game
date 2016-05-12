@@ -26,6 +26,7 @@ typedef struct _stats{
     int MJs;
     int MTVs;
     int MMONEYs;
+    int GO8s;
     // prestige will either be true or false
     int Prestige;
 } stats;
