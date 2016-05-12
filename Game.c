@@ -3,15 +3,21 @@
 #include "Game.h"
 
 //For vertices and arcs
-#define MAX_VERTICES 6
+#define MAX_COLUMNS 6
 #define MAX_ROWS 11
-#define MAX_ARCS_PER_ROW 8
+#define MAX_ARCS_PER_COLUMN 10
 
 //For regions
-#define MAX_REGION_ROWS 9
-#define MAX_REGION_COLUMNS 3
+#define MAX_REGION_ROWS 5
+#define MAX_REGION_COLUMNS 5
 
 
+#define DEFAULT_DISCIPLINES {STUDENT_BQN, STUDENT_MMONEY, STUDENT_MJ, \
+                STUDENT_MMONEY, STUDENT_MJ, STUDENT_BPS, STUDENT_MTV, \
+                STUDENT_MTV, STUDENT_BPS,STUDENT_MTV, STUDENT_BQN, \
+                STUDENT_MJ, STUDENT_BQN, STUDENT_THD, STUDENT_MJ, \
+                STUDENT_MMONEY, STUDENT_MTV, STUDENT_BQN, STUDENT_BPS}
+#define DEFAULT_DICE {9,10,8,12,6,5,3,11,3,11,4,6,4,7,9,2,8,10,5}
 
 typedef struct _stats{
     int KPIs;
@@ -31,9 +37,13 @@ typedef struct _stats{
     int Prestige;
 } stats;
 
+typedef struct _region {
+    int boardRegions[MAX_REGION_COLUMNS][MAX_REGION_ROWS];
+    int diceVal[MAX_REGION_COLUMNS][MAX_REGION_ROWS];
+} region;
+
 typedef struct _game {
     int turnNumber; 
-    int currentTurn;
     int whoseTurn;
     int currentDice;
     action currentAction;
@@ -55,22 +65,498 @@ typedef struct _game {
     //for rows 1 and 9 if [vertex] > 3 then the point is outside the board
     //
     */
-    int boardVertices[MAX_ROWS][MAX_VERTICES];
+    int boardVertices[MAX_COLUMNS][MAX_ROWS];
     
     /*2 dimensional array of the
     //form [row][arc] conataining the contents of the arc.
     */
-    int boardArcs[MAX_ROWS][MAX_ARCS_PER_ROW];
+    int boardArcs[MAX_COLUMNS][MAX_ARCS_PER_COLUMN];
     
-    /*2D array whihc stores the 
-    //constents of the regions
-    */
-    int boardRegions[MAX_REGION_ROWS][MAX_REGION_COLUMNS];
-    
+    region bRegion;
+
     stats University[NUM_UNIS];
 } game;
 
+typedef char path[PATH_LIMIT];
+
+typedef struct _action {
+   int actionCode;  // see #defines above
+   path destination; // if the action operates on a vertex or ARC this
+                     // specifies *which* vertex or path.  unused 
+                     // otherwise
+   int disciplineFrom;  // used for the retrain students action
+   int disciplineTo;    // used for the retrain students action
+} action;
+
+Game newGame(int discipline[], int dice[]){
+    Game new = malloc(sizeof(struct _game));
+    int rowCount = 0;
+    int columnCount = 0;
+    int maxRows = 3;
+    int disciplineCount = 0;
+    short reverse = FALSE;
+
+    while (columnCount < 5){
+    while (rowCount < maxRows){
+        new->bRegion.boardRegions[columnCount][rowCount] = discipline[disciplineCount];
+        new->bRegion.diceVal[columnCount][rowCount] = dice[disciplineCount];
+        rowCount++;
+        disciplineCount++;
+    }
+
+    rowCount = 0;   
+    
+    if (maxRows == MAX_REGION_ROWS){
+        reverse = TRUE;
+    }
+
+    if (reverse == TRUE){
+        maxRows--;
+    } else {
+        maxRows++;
+    }
+
+        columnCount++;
+    }
+
+    new->turnNumber = 0;
+
+    new->whoseTurn = NO_ONE;
+    
+    //initialising stats
+    int uniCount = 0;
+    while (uniCount < NUM_UNIS){
+    new->University[uniCount].KPIs = 0;
+    new->University[uniCount].Campuses = 2;
+    new->University[uniCount].ARCGrants = 0;
+    new->University[uniCount].Group = 0;
+    new->University[uniCount].Patents = 0;
+    new->University[uniCount].Papers = 0;
+    new->University[uniCount].THDs = 0;
+    new->University[uniCount].BQNs = 3;
+    new->University[uniCount].BPSs = 3;
+    new->University[uniCount].MJs = 1;
+    new->University[uniCount].MMONEYs = 1;
+    new->University[uniCount].MTVs = 1;
+    new->University[uniCount].Prestige = FALSE;
+    new->University[uniCount].G08s = 0;
+    uniCount++;
+    }
+    
+
+    //initialising the gameboard
+    columnCount = 0;
+    while (columnCount < MAX_COLUMNS){
+    rowCount = 0;    
+    while (rowCount < MAX_ROWS){
+        new->boardVertices[columnCount][rowCount] = NO_ONE;
+        rowCount++; 
+    }
+    
+    columnCount++;
+    }
+
+    columnCount = 0;
+    while (columnCount < MAX_COLUMNS){
+    int arcCount = 0;    
+    while (arcCount < MAX_ARCS_PER_COLUMN){
+        new->boardArcs[columnCount][arcCount] = NO_ONE;
+        arcCount++; 
+    }
+    
+    columnCount++;
+    }
+   
+    //initialising the starting positions for each uni.
+    new->boardVertices[3][0] = UNI_A;
+    new->boardVertices[4][10] = UNI_A;
+    new->boardVertices[0][1] = UNI_B;
+    new->boardVertices[5][5] = UNI_B;
+    new->boardVertices[0][6] = UNI_C;
+    new->boardVertices[5][0] = UNI_C;
+
+    return new;
+}
+
+void disposeGame(Game g){
+    free(g);
+}
+
+void makeAction (Game g, action a);
+
+void throwDice (Game g, int diceScore);
+
+int getDiscipline (Game g, int regionID);
+
+int getDiceValue (Game g, int regionID);
+
+int getMostARCs (Game g);
+
+int getMostPublications (Game g);
+
+int getTurnNumber (Game g);
+
+int getWhoseTurn (Game g);
+
+int getCampus(Game g, path pathToVertex);
+
+int getARC(Game g, path pathToEdge);
+
+int isLegalAction (Game g, action a) {
+   int isLegal = FALSE;
+   //check path
+   //path must be RLB
+   //path must be less than 150 characters
+   //path must not leave the board
+   //check all adjacent vertexes
+   //record in:
+   //if boardVertices[path destination][path destination] == 0 then empty
+   //if boardArcs[path destination][pathdestination] == 0 then empty
+   typedef struct _pathTrack {
+      int currCollumn;
+      int currRow;
+      int validPath;
+     
+      int prevCollumn;
+      int prevRow;
+    } pathTrack;
+    
+    pathTrack track;
+
+    track.currCollumn = 5;
+    track.currRow = 0;
+    track.validPath = TRUE;
+
+   if (a->destination[0] != 'R' && a->destination[0] != 'L') {
+      point.validPath = FALSE;
+   } else {
+      track.prevCollumn = 5;
+      track.prevRow = 0;
+
+      if (a->destination[0] == 'R') {
+         track.currCollumn = (track.prevCollumn - 1);
+         track.currRow = (track.prevRow + 1);
+      } else if (a->destination[0] == 'L') {
+         track.currCollumn = (track.prevCollumn + 1);
+         track.currRow = (track.prevRow);
+      }
+    }
+
+      int i = 1;
+      while (a->destination[i] != NULL && track.validPath == TRUE) {
+         if (track.currCollumn > 11 ||  track.currCollumn < 0  ||
+             track.currRow > 10 || track.currRow < 0) {
+             
+            track.validPath = FALSE;
+
+         } else if (a->destination[i] == 'R') {
+            
+            if ((track.currCollumn - 1) == (track.prevCollumn) 
+            && (track.currRow - 1) == (track.prevRow)) {
+    
+               track.prevCollumn = track.currCollumn;
+               track.prevRow = track.currRow;
+               track.currCollumn = currCollumn - 1;
+               track.currRow = track.currRow + 1;
+
+            } else if ((track.currCollumn + 1) == (track.prevCollumn) 
+                        && (track.currRow) == (track.prevRow)) {
+              //execute movement
+               track.prevCollumn = track.currCollumn;
+               track.prevRow= track.currRow;
+               track.currCollumn = track.currCollumn - 1;
+               track.currRow = track.currRow - 1;
+
+            } else if ((track.currCollumn - 1) == (track.prevCollumn) 
+                       && (track.currRow + 1) == (track.prevRow)) {
+                       //execute movement
+               track.prevCollumn = track.currCollumn;
+               track.prevRow = track.currRow;
+               track.currCollumn++;
 
 
+            } else if ((track.currCollumn + 1) == (track.prevCollumn) 
+                       && (track.currRow - 1) == (track.prevRow)) {
+              //execute movement
+              track.prevCollumn = track.currCollumn;
+              track.prevRow = track.currRow;
+              track.currCollumn--;
 
 
+            } else if ((track.currCollumn - 1) == (track.prevCollumn) 
+                       && (track.currRow) == (track.prevRow)) {
+               //execute movement
+               track.prevCollumn = track.currCollumn;
+               track.prevRow = track.currRow;
+               track.currCollumn++;
+               track.currRow++;
+
+
+            } else if ((track.currCollumn + 1) == (track.prevCollumn) 
+                       && (track.currRow + 1) == (track.prevRow)) {
+               //execute movement
+               track.prevCollumn = track.currCollumn;
+               track.prevRow = track.currRow;
+               track.currCollumn++;
+               track.currRow--;
+            }
+
+         } else if (a->destination[i] == 'L') {
+               
+            if ((track.currCollumn - 1) == (track.prevCollumn) 
+                && (track.currRow - 1) == (track.prevRow)) {
+    
+               track.prevCollumn = track.currCollumn;
+               track.prevRow = track.currRow;
+               track.currCollumn++;
+
+            } else if ((track.currCollumn + 1) == (track.prevCollumn) 
+                        && (track.currRow) == (track.prevRow)) {
+              //execute movement
+               track.prevCollumn = track.currCollumn;
+               track.prevRow = track.currRow;
+               track.currCollumn--;
+               track.currRow++;
+
+            } else if ((track.currCollumn - 1) == (track.prevCollumn) 
+                       && (track.currRow + 1) == (track.prevRow)) {
+                       //execute movement
+               track.prevCollumn = track.currCollumn;
+               track.prevCollumn = track.currRow;
+               track.currCollumn--;
+               track.currRow--;
+
+
+            } else if ((track.currCollumn + 1) == (track.prevCollumn) 
+                       && (track.currRow - 1) == (track.prevRow)) {
+              //execute movement
+              track.prevCollumn = track.currCollumn;
+              track.prevRow = track.currRow;
+              track.currCollumn++;
+              track.currRow++;
+
+
+            } else if ((track.currCollumn - 1) == (track.prevCollumn ) 
+                       && (track.currRow) == (track.prevRow)) {
+               //execute movement
+               track.prevCollumn = track.currCollumn;
+               track.prevRow = track.currRow;
+               track.currCollumn++;
+               track.currRow--;
+
+
+            } else if ((track.currCollumn + 1) == (track.prevCollumn) 
+                       && (track.currRow + 1) == (track.prevRow)) {
+               //execute movement
+               track.prevCollumn = track.currCollumn;
+               track.prevRow = track.currRow;
+               track.currCollumn--;
+               track.currRow++;
+            }
+
+            i++;
+         }
+
+    int C;
+    int R = track.currRow;
+
+    if (track.currCollumn == 0 || track.currCollumn == 1) {
+       C = 0;
+    } else if (track.currCollumn == 2 || track.currCollumn == 3) {
+       C = 1;
+    } else if (track.currCollumn == 4 || track.currCollumn == 5) {
+       C = 2;
+    } else if (track.currCollumn == 6 || track.currCollumn == 7) {
+       C = 3;
+    } else if (track.currCollumn == 8 || track.currCollumn == 9) {
+       C = 4;
+    } else if (track.currCollumn == 10 || track.currCollumn == 11) {
+       C = 5; 
+    } else {
+        track.validPath = FALSE;
+    }
+
+    int C = track.currCollumn;
+    int R = track.currRow;
+
+   if (g->currentTurn == -1) {
+      isLegal= FALSE;
+    } else if (a->actionCode == PASS) {
+      isLegal = TRUE;
+    } else if (a->actionCode == BUILD_CAMPUS) {
+       //campus is not adjacent to other campus
+       int validCampus = FALSE;
+       
+       if (track.prevCollumn == (track.currCollumn - 1) &&
+           track.prevRow == (track.currRow - 1)) {
+           
+           if (g->boardVertices[C][R-1] == 0 &&
+               g->boardVertices[C+1][R] == 0 &&
+               g->boardVertices[C][R+1] == 0) {
+
+               validCampus == TRUE;
+           }
+
+       } else if (track.prevCollumn == (track.currCollumn + 1) &&
+           track.prevRow == (track.currRow)) {
+
+           if (g->boardVertices[C][R-1] == 0 &&
+               g->boardVertices[C+1][R] == 0 &&
+               g->boardVertices[C][R+1] == 0) {
+
+               validCampus == TRUE;
+           }
+           
+       } else if (track.prevCollumn == (track.currCollumn - 1) &&
+           track.prevRow == (track.currRow + 1)) {
+
+           if (g->boardVertices[C][R-1] == 0 &&
+               g->boardVertices[C+1][R] == 0 &&
+               g->boardVertices[C][R+1] == 0) {
+
+               validCampus == TRUE;
+           }    
+
+       } else if (track.prevCollumn == (track.currCollumn + 1) &&
+           track.prevRow == (track.currRow - 1)) {
+           
+           if (g->boardVertices[C][R-1] == 0 &&
+               g->boardVertices[C-1][R] == 0 &&
+               g->boardVertices[C][R+1] == 0) {
+
+               validCampus == TRUE;
+           }
+
+       } else if (track.prevCollumn == (track.currCollumn - 1) &&
+           track.prevRow == (track.currRow)) {
+
+           if (g->boardVertices[C][R-1] == 0 &&
+               g->boardVertices[C-1][R] == 0 &&
+               g->boardVertices[C][R+1] == 0) {
+
+               validCampus == TRUE;
+           }
+
+       } else if (track.prevCollumn == (track.currCollumn + 1) &&
+           track.prevRow == (track.currRow + 1)) {
+           
+           if (g->boardVertices[C][R-1] == 0 &&
+               g->boardVertices[C-1][R] == 0 &&
+               g->boardVertices[C][R+1] == 0) {
+
+               validCampus == TRUE;
+           }
+
+       }
+
+       if (boardVertices[C][R] != g->whoseTurn) {
+          validCampus = FALSE;
+       }
+
+       //campus is on arc belonging to player
+       int requiredBPS = 1;
+       int requiredBQNSs = 1;
+       int requiredMJ = 1;
+       int requiredMTV = 1;
+
+       if (g->University[g->whoseTurn]->MJs >= requiredMJ
+       && g->University[g->whoseTurn]->MTVs >= requiredMTV
+       && g->University[g->whoseTurn]->BQNs >= requiredBQNs
+       && g->University[g->whoseTurn]->BPSs >= requiredPBS) {
+          if (validCampus == TRUE) {
+            isLegal = TRUE;
+          }
+       }
+       
+       if (g->boardVertices[C][R] == 0 &&
+           g->boardVertices) {
+
+       }
+
+   } else if (a->actionCode == BUILD_GO8) {
+      int requiredMJ = 2;
+      int requiredMMONEYS = 3;
+
+      if (g->University[g->whoseTurn]->MJs >= requiredMJ &&
+          g->University[g->whoseTurn]->MMONEYs >= requiredMMONEYS) {
+
+         if (g->boardVertices[C][R] == g->whoseTurn &&
+             g->University[g->whoseTurn]->GO8s <= 8) {
+            isLegal = TRUE;
+         }
+      }
+   } else if (a->actionCode == OBTAIN_ARC) {
+      //check path is valid (not occupied by another arc)
+      //not connected to other campus arc
+      int requiredBQN = 1;
+      int requiredBPS = 1;
+
+      if (g->University[g->whoseTurn]->MJs >= requiredBQN &&
+          g->University[g->whoseTurn]->MMONEYs >= requiredBPS) {
+         isLegal = TRUE;
+      }
+
+
+   } else if (a->actionCode == START_SPINOFF) {
+      int requiredMTV = 1;
+      int requiredMONEY = 1;
+      int requiredMJ = 1;
+
+      if (g->University[g->whoseTurn]->MJs >= requiredMJ &&
+          g->University[g->whoseTurn]->MMONEYs >= requiredMMONEYS &&
+          g->University[g->whoseTurn]->MTVs >= requiredMTV) {
+      
+         isLegal = TRUE;
+      }
+
+   } else if (a->actionCode == OBTAIN_PUBLICATION) {
+      isLegal = FALSE;
+   } else if (a->actionCode == OBTAIN_IP_PATENT) {
+      isLegal = FALSE;
+   } else if (a->actionCode == RETRAIN_STUDENTS) {
+      //check number of students is enough
+      int studentNumber;
+      
+      if (a->disciplineFrom == STUDENT_THD) {
+         isLegal = FALSE;
+         studentNumber = FALSE;
+      } else if (a->disciplineFrom == STUDENT_BPS) {
+         studentNumber = g->University[g->whoseTurn].BPSs;
+      } else if (a->disciplineFrom == STUDENT_BQN) {
+         studentNumber = g->University[g->whoseTurn].BQNs;
+      } else if (a->disciplineFrom == STUDENT_MJ) {
+         studentNumber = g->University[g->whoseTurn].MJs;
+      }else if (a->disciplineFrom == STUDENT_MTV ) {
+         studentNumber = g->University[g->whoseTurn].MTVs;
+      } else if (a->disciplineFrom == STUDENT_MMONEY) {
+         studentNumber = g->University[g->whoseTurn].MMONEYs;
+      }
+      
+
+      if (a->disciplineFrom != STUDENT_THD && studentNumber >= 3 && ) {
+         isLegal = TRUE;
+      }
+
+   }
+
+   return isLegal;
+}
+
+int getKPIpoints (Game g, int player);
+
+int getARCs (Game g, int player);
+
+int getARCs (Game g, int player);
+
+int getGO8s (Game g, int player);
+
+int getCampuses (Game g, int player);
+
+int getIPs (Game g, int player);
+
+int getPublications (Game g, int player);
+
+int getStudents (Game g, int player, int discipline);
+
+int getExchangeRate (Game g, int player, 
+                     int disciplineFrom, int disciplineTo);
