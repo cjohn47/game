@@ -11,6 +11,9 @@
 #define MAX_REGION_ROWS 5
 #define MAX_REGION_COLUMNS 5
 
+#define FAILED -1
+#define OUT_OF_BOUNDS -1
+
 
 #define DEFAULT_DISCIPLINES {STUDENT_BQN, STUDENT_MMONEY, STUDENT_MJ, \
                 STUDENT_MMONEY, STUDENT_MJ, STUDENT_BPS, STUDENT_MTV, \
@@ -96,84 +99,93 @@ Game newGame(int discipline[], int dice[]){
     int disciplineCount = 0;
     short reverse = FALSE;
 
+    int r_count = 0;
+    int c_count = 0;
+    while (c_count < MAX_REGION_COLUMNS){
+	r_count = 0;
+	while (r_count < MAX_REGION_ROWS){
+	    new->bRegion.boardRegions[c_count][r_count] = OUT_OF_BOUNDS;
+            new->bRegion.diceVal[c_count][r_count] = OUT_OF_BOUNDS;
+	    r_count++;
+	}
+        c_count++;
+    }
+
     while (columnCount < 5){
-    while (rowCount < maxRows){
-        new->bRegion.boardRegions[columnCount][rowCount] = discipline[disciplineCount];
-        new->bRegion.diceVal[columnCount][rowCount] = dice[disciplineCount];
-        rowCount++;
-        disciplineCount++;
-    }
+	while (rowCount < maxRows){
+	    new->bRegion.boardRegions[columnCount][rowCount] = discipline[disciplineCount];
+	    new->bRegion.diceVal[columnCount][rowCount] = dice[disciplineCount];
+       	rowCount++;
+   	    disciplineCount++;
+	}
 
-    rowCount = 0;   
-    
-    if (maxRows == MAX_REGION_ROWS){
-        reverse = TRUE;
-    }
+	rowCount = 0;	
+	
+	if (maxRows == MAX_REGION_ROWS){
+	    reverse = TRUE;
+	}
 
-    if (reverse == TRUE){
-        maxRows--;
-    } else {
-        maxRows++;
-    }
+	if (reverse == TRUE){
+	    maxRows--;
+	} else {
+	    maxRows++;
+	}
 
         columnCount++;
     }
 
-    new->turnNumber = 0;
+    new->turnNumber = -1;
 
     new->whoseTurn = NO_ONE;
-    
-    //initialising stats
+
     int uniCount = 0;
     while (uniCount < NUM_UNIS){
-    new->University[uniCount].KPIs = 0;
-    new->University[uniCount].Campuses = 2;
-    new->University[uniCount].ARCGrants = 0;
-    new->University[uniCount].Group = 0;
-    new->University[uniCount].Patents = 0;
-    new->University[uniCount].Papers = 0;
-    new->University[uniCount].THDs = 0;
-    new->University[uniCount].BQNs = 3;
-    new->University[uniCount].BPSs = 3;
-    new->University[uniCount].MJs = 1;
-    new->University[uniCount].MMONEYs = 1;
-    new->University[uniCount].MTVs = 1;
-    new->University[uniCount].Prestige = FALSE;
-    new->University[uniCount].G08s = 0;
-    uniCount++;
+	new->university[uniCount].KPIs = 0;
+	new->university[uniCount].Campuses = 2;
+	new->university[uniCount].ARCGrants = 0;
+	new->university[uniCount].Group = 0;
+	new->university[uniCount].Patents = 0;
+	new->university[uniCount].Papers = 0;
+	new->university[uniCount].THDs = 0;
+	new->university[uniCount].BQNs = 3;
+	new->university[uniCount].BPSs = 3;
+	new->university[uniCount].MJs = 1;
+	new->university[uniCount].MMONEYs = 1;
+	new->university[uniCount].MTVs = 1;
+	new->university[uniCount].Prestige = FALSE;
+	uniCount++;
     }
     
-
-    //initialising the gameboard
+    
     columnCount = 0;
     while (columnCount < MAX_COLUMNS){
-    rowCount = 0;    
-    while (rowCount < MAX_ROWS){
-        new->boardVertices[columnCount][rowCount] = NO_ONE;
-        rowCount++; 
-    }
-    
-    columnCount++;
+	rowCount = 0;    
+	while (rowCount < MAX_ROWS){
+		new->boardVertices[columnCount][rowCount] = NO_ONE;
+		rowCount++; 
+	}
+	
+	columnCount++;
     }
 
     columnCount = 0;
     while (columnCount < MAX_COLUMNS){
-    int arcCount = 0;    
-    while (arcCount < MAX_ARCS_PER_COLUMN){
-        new->boardArcs[columnCount][arcCount] = NO_ONE;
-        arcCount++; 
-    }
-    
-    columnCount++;
+	int arcCount = 0;    
+	while (arcCount < MAX_ARCS_PER_COLUMN){
+		new->boardArcs[columnCount][arcCount] = NO_ONE;
+		arcCount++; 
+	}
+	
+	columnCount++;
     }
    
     //initialising the starting positions for each uni.
-    new->boardVertices[3][0] = UNI_A;
-    new->boardVertices[4][10] = UNI_A;
-    new->boardVertices[0][1] = UNI_B;
-    new->boardVertices[5][5] = UNI_B;
-    new->boardVertices[0][6] = UNI_C;
-    new->boardVertices[5][0] = UNI_C;
+    new->boardVertices[2][0] = CAMPUS_A;
+    new->boardVertices[3][10] = CAMPUS_A;
+    new->boardVertices[0][1] = CAMPUS_B;
+    new->boardVertices[5][5] = CAMPUS_B;
+    new->boardVertices[0][6] = CAMPUS_C;
+    new->boardVertices[5][0] = CAMPUS_C;
 
     return new;
 }
@@ -184,7 +196,105 @@ void disposeGame(Game g){
 
 void makeAction (Game g, action a);
 
-void throwDice (Game g, int diceScore);
+void throwDice(Game g, int diceScore){
+    int v_rowCount = 0;
+    int v_colCount = 0;
+    int r_rowCount = 0;
+    int r_colCount = 0;
+	    
+    int uniCount = 0;
+    g->currentDice = diceScore;
+    while (uniCount < NUM_UNIS){
+	v_colCount = 0;
+        while (v_colCount < MAX_COLUMNS){
+	    v_rowCount = 0;
+            while (v_rowCount < MAX_ROWS){
+                r_colCount = 0;
+                while (r_colCount < MAX_REGION_COLUMNS){
+                    r_rowCount = 0;
+		    		while (r_rowCount < MAX_REGION_ROWS){
+                      
+			    		short condition1 = FALSE;
+						if (v_colCount != 0 && v_colCount != MAX_COLUMNS - 1 && v_colCount != 0){    
+							condition1 = v_colCount == r_colCount || v_colCount == r_colCount-1;
+						} else if (v_colCount == 0){
+							condition1 = v_colCount == r_colCount;
+						} else if (v_colCount == MAX_COLUMNS - 1){
+							condition1 = v_colCount == r_colCount + 1;
+						}
+						if (v_colCount < 3 && v_rowCount == 0){
+							condition1 = v_colCount == r_colCount;
+						} else if (v_colCount > 2 && v_rowCount == 0){
+							condition1 = v_colCount == r_colCount + 1;
+						} 
+
+						int loopCount = 0;
+						int maxRows = 6;
+						while (loopCount < MAX_COLUMNS){
+							if (v_rowCount == maxRows && v_colCount < 3){
+								condition1 = v_colCount == r_colCount;
+							}else if (v_rowCount == maxRows && v_colCount > 2){
+								condition1 = v_colCount == r_colCount + 1;
+							}
+
+							if (loopCount > 2){
+								maxRows -= 2;
+							} else if (loopCount < 2){
+								maxRows +=2;
+							}
+							loopCount++;
+						}
+
+						short condition2 = (v_rowCount >= 2 * r_rowCount && v_rowCount <= 2 * r_rowCount + 2);
+	        			short condition3 = g->bRegion.diceVal[r_colCount][r_rowCount] == diceScore;
+            			short condition4 = g->boardVertices[v_colCount][v_rowCount] == uniCount + 1;
+
+	
+		                if (condition1 && condition2 && condition3 && condition4){
+
+				    		if (g->bRegion.boardRegions[r_colCount][r_rowCount] == STUDENT_THD){
+								g->university[uniCount].THDs++;
+				    		}
+					    	if (g->bRegion.boardRegions[r_colCount][r_rowCount] == STUDENT_BPS){
+								g->university[uniCount].BPSs++;
+					    	}
+					   		if (g->bRegion.boardRegions[r_colCount][r_rowCount] == STUDENT_BQN){
+		                        g->university[uniCount].BQNs++;
+					    	}
+					    	if (g->bRegion.boardRegions[r_colCount][r_rowCount] == STUDENT_MJ){
+								g->university[uniCount].MJs++;
+					    	}
+				            if (g->bRegion.boardRegions[r_colCount][r_rowCount] == STUDENT_MTV){							
+								g->university[uniCount].MTVs++;
+					    	}
+					    	if (g->bRegion.boardRegions[r_colCount][r_rowCount] == STUDENT_MMONEY){
+								g->university[uniCount].MMONEYs++;
+					    	}
+				        }
+		
+					r_rowCount++;
+				    }
+		
+				    r_colCount++;
+			        }   
+				
+					v_rowCount++;
+				    }
+				
+    	        v_colCount++;
+    	    }
+
+
+    	    if (diceScore == 7){
+		    g->university[uniCount].THDs += g->university[uniCount].MTVs + g->university[uniCount].MMONEYs;
+   	        g->university[uniCount].MTVs = 0;
+		    g->university[uniCount].MMONEYs = 0;  
+		}
+
+     
+        uniCount++;
+    }
+}
 
 int getDiscipline (Game g, int regionID);
 
@@ -622,8 +732,29 @@ int getPublications (Game g, int player) {
     }
     i++;
 }
-
-int getStudents (Game g, int player, int discipline);
+int getStudents(Game g, int player, int studentID){
+    int numStudents = FAILED;
+    if (studentID == STUDENT_THD){
+		numStudents = g->university[player - 1].THDs;
+    }
+    if (studentID == STUDENT_BPS){
+		numStudents = g->university[player - 1].BPSs;
+    }
+    if (studentID == STUDENT_BQN){
+		numStudents = g->university[player - 1].BQNs;
+    }
+    if (studentID == STUDENT_MJ){
+		numStudents = g->university[player - 1].MJs;
+    }
+    if (studentID == STUDENT_MTV){
+		numStudents = g->university[player - 1].MTVs;
+    }
+    if (studentID == STUDENT_MMONEY){
+		numStudents = g->university[player - 1].MMONEYs;
+    }
+    assert(numStudents != FAILED);
+    return numStudents;
+}
 
 int getExchangeRate (Game g, int player, 
                      int disciplineFrom, int disciplineTo);
