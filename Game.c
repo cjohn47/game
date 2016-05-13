@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "Game.h"
 
 //For vertices and arcs
@@ -82,15 +83,6 @@ typedef struct _game {
 
 typedef char path[PATH_LIMIT];
 
-typedef struct _action {
-   int actionCode;  // see #defines above
-   path destination; // if the action operates on a vertex or ARC this
-                     // specifies *which* vertex or path.  unused 
-                     // otherwise
-   int disciplineFrom;  // used for the retrain students action
-   int disciplineTo;    // used for the retrain students action
-} action;
-
 Game newGame(int discipline[], int dice[]){
     Game new = malloc(sizeof(struct _game));
     int rowCount = 0;
@@ -140,19 +132,19 @@ Game newGame(int discipline[], int dice[]){
 
     int uniCount = 0;
     while (uniCount < NUM_UNIS){
-	new->university[uniCount].KPIs = 0;
-	new->university[uniCount].Campuses = 2;
-	new->university[uniCount].ARCGrants = 0;
-	new->university[uniCount].Group = 0;
-	new->university[uniCount].Patents = 0;
-	new->university[uniCount].Papers = 0;
-	new->university[uniCount].THDs = 0;
-	new->university[uniCount].BQNs = 3;
-	new->university[uniCount].BPSs = 3;
-	new->university[uniCount].MJs = 1;
-	new->university[uniCount].MMONEYs = 1;
-	new->university[uniCount].MTVs = 1;
-	new->university[uniCount].Prestige = FALSE;
+	new->University[uniCount].KPIs = 0;
+	new->University[uniCount].Campuses = 2;
+	new->University[uniCount].ARCGrants = 0;
+	new->University[uniCount].Group = 0;
+	new->University[uniCount].Patents = 0;
+	new->University[uniCount].Papers = 0;
+	new->University[uniCount].THDs = 0;
+	new->University[uniCount].BQNs = 3;
+	new->University[uniCount].BPSs = 3;
+	new->University[uniCount].MJs = 1;
+	new->University[uniCount].MMONEYs = 1;
+	new->University[uniCount].MTVs = 1;
+	new->University[uniCount].Prestige = FALSE;
 	uniCount++;
     }
     
@@ -253,22 +245,22 @@ void throwDice(Game g, int diceScore){
 		                if (condition1 && condition2 && condition3 && condition4){
 
 				    		if (g->bRegion.boardRegions[r_colCount][r_rowCount] == STUDENT_THD){
-								g->university[uniCount].THDs++;
+								g->University[uniCount].THDs++;
 				    		}
 					    	if (g->bRegion.boardRegions[r_colCount][r_rowCount] == STUDENT_BPS){
-								g->university[uniCount].BPSs++;
+								g->University[uniCount].BPSs++;
 					    	}
-					   		if (g->bRegion.boardRegions[r_colCount][r_rowCount] == STUDENT_BQN){
-		                        g->university[uniCount].BQNs++;
+					   	if (g->bRegion.boardRegions[r_colCount][r_rowCount] == STUDENT_BQN){
+		                        			g->University[uniCount].BQNs++;
 					    	}
 					    	if (g->bRegion.boardRegions[r_colCount][r_rowCount] == STUDENT_MJ){
-								g->university[uniCount].MJs++;
+								g->University[uniCount].MJs++;
 					    	}
 				            if (g->bRegion.boardRegions[r_colCount][r_rowCount] == STUDENT_MTV){							
-								g->university[uniCount].MTVs++;
+								g->University[uniCount].MTVs++;
 					    	}
 					    	if (g->bRegion.boardRegions[r_colCount][r_rowCount] == STUDENT_MMONEY){
-								g->university[uniCount].MMONEYs++;
+								g->University[uniCount].MMONEYs++;
 					    	}
 				        }
 		
@@ -286,9 +278,9 @@ void throwDice(Game g, int diceScore){
 
 
     	    if (diceScore == 7){
-		    g->university[uniCount].THDs += g->university[uniCount].MTVs + g->university[uniCount].MMONEYs;
-   	        g->university[uniCount].MTVs = 0;
-		    g->university[uniCount].MMONEYs = 0;  
+		    g->University[uniCount].THDs += g->University[uniCount].MTVs + g->University[uniCount].MMONEYs;
+   	        g->University[uniCount].MTVs = 0;
+		    g->University[uniCount].MMONEYs = 0;  
 		}
 
      
@@ -324,9 +316,9 @@ int getMostARCs (Game g) {
     int i = 0;
     
     while (i<NUM_UNIS) {
-        if (g-> university[i] . ARCGrants > NUM_ARCS) {
+        if (g-> University[i] . ARCGrants > NUM_ARCS) {
             university = i;
-        } else if (NUM_ARCS == (g-> university[i] . ARCGrants)) {
+        } else if (NUM_ARCS == (g-> University[i] . ARCGrants)) {
             university = -1;
         }
         i++;
@@ -340,10 +332,10 @@ int getMostPublications (Game g) {
     int i = 0;
     
     while (i<NUM_UNIS) {
-        if ((g-> university[i] . papers + g-> university[i] . patents) > NUM_PUBS) {
+        if ((g-> University[i] . Papers + g-> University[i] . Patents) > NUM_PUBS) {
             university = i;
         }
-        else if (NUM_PUBS == (g-> university[i] . papers + g-> university[i] . patents)) {
+        else if (NUM_PUBS == (g-> University[i] . Papers + g-> University[i] . Patents)) {
             university = -1;
         }
         i++;
@@ -360,13 +352,7 @@ int getWhoseTurn (Game g) {
 }
 
 int getCampuses(Game g, int player) {
-    int university = -1;
-    int i = 0;
-    
-    if (i<NUM_UNIS) {
-        return g-> university[i] . Campuses
-    }
-    i++;
+        return g-> University[player-1] . Campuses;
 }
 
 int getARC(Game g, path pathToEdge);
@@ -396,29 +382,29 @@ int isLegalAction (Game g, action a) {
     track.currRow = 0;
     track.validPath = TRUE;
 
-   if (a->destination[0] != 'R' && a->destination[0] != 'L') {
+   if (a.destination[0] != 'R' && a.destination[0] != 'L') {
       point.validPath = FALSE;
    } else {
       track.prevCollumn = 5;
       track.prevRow = 0;
 
-      if (a->destination[0] == 'R') {
+      if (a.destination[0] == 'R') {
          track.currCollumn = (track.prevCollumn - 1);
          track.currRow = (track.prevRow + 1);
-      } else if (a->destination[0] == 'L') {
+      } else if (a.destination[0] == 'L') {
          track.currCollumn = (track.prevCollumn + 1);
          track.currRow = (track.prevRow);
       }
     }
 
       int i = 1;
-      while (a->destination[i] != NULL && track.validPath == TRUE) {
+      while (a.destination[i] != NULL && track.validPath == TRUE) {
          if (track.currCollumn > 11 ||  track.currCollumn < 0  ||
              track.currRow > 10 || track.currRow < 0) {
              
             track.validPath = FALSE;
 
-         } else if (a->destination[i] == 'R') {
+         } else if (a.destination[i] == 'R') {
             
             if ((track.currCollumn - 1) == (track.prevCollumn) 
             && (track.currRow - 1) == (track.prevRow)) {
@@ -470,7 +456,7 @@ int isLegalAction (Game g, action a) {
                track.currRow--;
             }
 
-         } else if (a->destination[i] == 'L') {
+         } else if (a.destination[i] == 'L') {
                
             if ((track.currCollumn - 1) == (track.prevCollumn) 
                 && (track.currRow - 1) == (track.prevRow)) {
@@ -550,9 +536,9 @@ int isLegalAction (Game g, action a) {
 
    if (g->currentTurn == -1) {
       isLegal= FALSE;
-    } else if (a->actionCode == PASS) {
+    } else if (a.actionCode == PASS) {
       isLegal = TRUE;
-    } else if (a->actionCode == BUILD_CAMPUS) {
+    } else if (a.actionCode == BUILD_CAMPUS) {
        //campus is not adjacent to other campus
        int validCampus = FALSE;
        
@@ -642,7 +628,7 @@ int isLegalAction (Game g, action a) {
 
        }
 
-   } else if (a->actionCode == BUILD_GO8) {
+   } else if (a.actionCode == BUILD_GO8) {
       int requiredMJ = 2;
       int requiredMMONEYS = 3;
 
@@ -654,7 +640,7 @@ int isLegalAction (Game g, action a) {
             isLegal = TRUE;
          }
       }
-   } else if (a->actionCode == OBTAIN_ARC) {
+   } else if (a.actionCode == OBTAIN_ARC) {
       //check path is valid (not occupied by another arc)
       //not connected to other campus arc
       int requiredBQN = 1;
@@ -666,7 +652,7 @@ int isLegalAction (Game g, action a) {
       }
 
 
-   } else if (a->actionCode == START_SPINOFF) {
+   } else if (a.actionCode == START_SPINOFF) {
       int requiredMTV = 1;
       int requiredMONEY = 1;
       int requiredMJ = 1;
@@ -678,31 +664,31 @@ int isLegalAction (Game g, action a) {
          isLegal = TRUE;
       }
 
-   } else if (a->actionCode == OBTAIN_PUBLICATION) {
+   } else if (a.actionCode == OBTAIN_PUBLICATION) {
       isLegal = FALSE;
-   } else if (a->actionCode == OBTAIN_IP_PATENT) {
+   } else if (a.actionCode == OBTAIN_IP_PATENT) {
       isLegal = FALSE;
-   } else if (a->actionCode == RETRAIN_STUDENTS) {
+   } else if (a.actionCode == RETRAIN_STUDENTS) {
       //check number of students is enough
       int studentNumber;
       
-      if (a->disciplineFrom == STUDENT_THD) {
+      if (a.disciplineFrom == STUDENT_THD) {
          isLegal = FALSE;
          studentNumber = FALSE;
-      } else if (a->disciplineFrom == STUDENT_BPS) {
+      } else if (a.disciplineFrom == STUDENT_BPS) {
          studentNumber = g->University[g->whoseTurn].BPSs;
-      } else if (a->disciplineFrom == STUDENT_BQN) {
+      } else if (a.disciplineFrom == STUDENT_BQN) {
          studentNumber = g->University[g->whoseTurn].BQNs;
-      } else if (a->disciplineFrom == STUDENT_MJ) {
+      } else if (a.disciplineFrom == STUDENT_MJ) {
          studentNumber = g->University[g->whoseTurn].MJs;
-      }else if (a->disciplineFrom == STUDENT_MTV ) {
+      }else if (a.disciplineFrom == STUDENT_MTV ) {
          studentNumber = g->University[g->whoseTurn].MTVs;
-      } else if (a->disciplineFrom == STUDENT_MMONEY) {
+      } else if (a.disciplineFrom == STUDENT_MMONEY) {
          studentNumber = g->University[g->whoseTurn].MMONEYs;
       }
       
 
-      if (a->disciplineFrom != STUDENT_THD && studentNumber >= 3 && ) {
+      if (a.disciplineFrom != STUDENT_THD && studentNumber >= 3 && ) {
          isLegal = TRUE;
       }
 
@@ -717,20 +703,14 @@ int getKPIpoints (Game g, int player){
     int i = 0;
     
     if (i<NUM_UNIS) {
-        return g-> university[i] . KPIs
+        return g-> University[i] . KPIs
     }
     i++
 }
 
 
 int getARCs (Game g, int player){
-    int university = -1;
-    int i = 0;
-    
-    if (i<NUM_UNIS) {
-        return g-> university[i] . ARCGrants
-    }
-    i++;
+        return g-> University[player - 1] . ARCGrants
 }
 
 int getARCs (Game g, int player);
@@ -742,33 +722,28 @@ int getCampuses (Game g, int player);
 int getIPs (Game g, int player);
 
 int getPublications (Game g, int player) {
-    int university = -1;
-    int i = 0;
-    
-    if (i<NUM_UNIS) {
-        return (g-> university[i] . Patents + g-> university[i].Papers)
-    }
-    i++;
+
+        return (g-> University[player-1] . Patents + g-> University[player-1].Papers)
 }
 int getStudents(Game g, int player, int studentID){
     int numStudents = FAILED;
     if (studentID == STUDENT_THD){
-		numStudents = g->university[player - 1].THDs;
+		numStudents = g->University[player - 1].THDs;
     }
     if (studentID == STUDENT_BPS){
-		numStudents = g->university[player - 1].BPSs;
+		numStudents = g->University[player - 1].BPSs;
     }
     if (studentID == STUDENT_BQN){
-		numStudents = g->university[player - 1].BQNs;
+		numStudents = g->University[player - 1].BQNs;
     }
     if (studentID == STUDENT_MJ){
-		numStudents = g->university[player - 1].MJs;
+		numStudents = g->University[player - 1].MJs;
     }
     if (studentID == STUDENT_MTV){
-		numStudents = g->university[player - 1].MTVs;
+		numStudents = g->University[player - 1].MTVs;
     }
     if (studentID == STUDENT_MMONEY){
-		numStudents = g->university[player - 1].MMONEYs;
+		numStudents = g->University[player - 1].MMONEYs;
     }
     assert(numStudents != FAILED);
     return numStudents;
