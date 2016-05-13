@@ -298,7 +298,25 @@ void throwDice(Game g, int diceScore){
 
 int getDiscipline (Game g, int regionID);
 
-int getDiceValue (Game g, int regionID);
+int getDiceValue(Game g, int regionID){
+    assert(regionID >= 0 && regionID < NUM_REGIONS);
+    int diceVal = FAILED; 
+    if (regionID < 3){
+        diceVal = g->bRegion.diceVal[0][regionID];
+    } else if (regionID < 7){
+	diceVal = g->bRegion.diceVal[1][regionID - 3];
+    } else if (regionID < 12){
+	diceVal = g->bRegion.diceVal[2][regionID - 7];
+    } else if (regionID < 16){
+	diceVal = g->bRegion.diceVal[3][regionID - 12];
+    } else if (regionID < NUM_REGIONS){
+	diceVal = g->bRegion.diceVal[4][regionID - 16];
+    }
+    
+    assert(diceVal != FAILED);
+
+    return diceVal;
+}
 
 int getMostARCs (Game g) {
     int university = -1;
