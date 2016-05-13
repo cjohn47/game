@@ -66,10 +66,15 @@ void testNewGame(void){
   int disciplines[] = DEFAULT_DISCIPLINES;
   int dice[] = DEFAULT_DICE;
   
-  newGame(disciplines, dice);
+  testGame = newGame(disciplines, dice);
   
-  assert(getDiceValue(testGame, 0) == dice[0]);
-  assert(getWhoseTurn(testGame) == 0);  
+  int counter = 0;
+  while(counter < NUM_REGIONS){
+     assert(getDiceValue(testGame, counter) == dice[counter]);
+     counter++;
+  }
+  assert(getWhoseTurn(testGame) == NO_ONE);  
+  disposeGame(testGame);
 }
 
 void testDisposeGame(void){
@@ -95,12 +100,47 @@ void testThrowDice(void){
   newGame(disciplines, dice);
 }
 
-void testGetDiscipline(void){
-  Game testGame;
+void testThrowDice(void){
   int disciplines[] = DEFAULT_DISCIPLINES;
   int dice[] = DEFAULT_DICE;
+  Game test = newGame(disciplines, dice);
   
-  newGame(disciplines, dice);
+  int diceCount = MIN_DEFAULT_DICE;
+  while (diceCount < MAX_DEFAULT_DICE){
+    throwDice(test, diceCount);
+
+    //test for UNI_A
+    if (diceCount == 11){
+       assert(getStudents(test, UNI_A, STUDENT_MTV) == 2);
+    }
+
+    if (diceCount == 6){
+       assert(getStudents(test, UNI_A, STUDENT_MJ) == 2);
+    }
+
+    //test for UNI_B
+    if (diceCount == 9){
+       assert(getStudents(test, UNI_B, STUDENT_BQN) == 4);
+    }
+
+    if (diceCount == 5){
+       assert(getStudents(test, UNI_B, STUDENT_BPS) == 4);
+    }
+
+    //test for UNI_C
+    if (diceCount == 8){
+       assert(getStudents(test, UNI_C, STUDENT_MTV) == 1);
+       assert(getStudents(test, UNI_C, STUDENT_MJ) == 2);
+    }
+
+    if (diceCount == 7){
+	assert(getStudents(test, UNI_A, STUDENT_THD) == 2);
+	assert(getStudents(test, UNI_B, STUDENT_THD) == 2);
+	assert(getStudents(test, UNI_C, STUDENT_THD) == 2);
+    }
+    diceCount++;
+  }
+
 }
 
 void testGetDiceValue(void){
