@@ -288,7 +288,25 @@ void throwDice(Game g, int diceScore){
     }
 }
 
-int getDiscipline (Game g, int regionID);
+int getDiscipline(Game g, int regionID){
+    assert(regionID >= 0 && regionID < NUM_REGIONS);
+    int discipline = FAILED; 
+    if (regionID < 3){
+        discipline = g->bRegion.boardRegions[0][regionID];
+    } else if (regionID < 7){
+	discipline = g->bRegion.boardRegions[1][regionID - 3];
+    } else if (regionID < 12){
+	discipline = g->bRegion.boardRegions[2][regionID - 7];
+    } else if (regionID < 16){
+	discipline = g->bRegion.boardRegions[3][regionID - 12];
+    } else if (regionID < NUM_REGIONS){
+	discipline = g->bRegion.boardRegions[4][regionID - 16];
+    }
+    
+    assert(discipline != FAILED);
+
+    return discipline;
+}
 
 int getDiceValue(Game g, int regionID){
     assert(regionID >= 0 && regionID < NUM_REGIONS);
@@ -383,7 +401,7 @@ int isLegalAction (Game g, action a) {
     track.validPath = TRUE;
 
    if (a.destination[0] != 'R' && a.destination[0] != 'L') {
-      point.validPath = FALSE;
+      track.validPath = FALSE;
    } else {
       track.prevCollumn = 5;
       track.prevRow = 0;
@@ -398,7 +416,7 @@ int isLegalAction (Game g, action a) {
     }
 
       int i = 1;
-      while (a.destination[i] != NULL && track.validPath == TRUE) {
+      while (a.destination[i] != '\0' && track.validPath == TRUE) {
          if (track.currCollumn > 11 ||  track.currCollumn < 0  ||
              track.currRow > 10 || track.currRow < 0) {
              
@@ -411,7 +429,7 @@ int isLegalAction (Game g, action a) {
     
                track.prevCollumn = track.currCollumn;
                track.prevRow = track.currRow;
-               track.currCollumn = currCollumn - 1;
+               track.currCollumn = track.currCollumn - 1;
                track.currRow = track.currRow + 1;
 
             } else if ((track.currCollumn + 1) == (track.prevCollumn) 
