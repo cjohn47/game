@@ -23,128 +23,131 @@ int isLegalAction (Game g, action a) {
     track.currRow = 0;
     track.validPath = TRUE;
 
-   if (a->destination[0] != 'R' && a->destination[0] != 'L') {
-      point.validPath = FALSE;
+   if (a.destination[0] != 'R' && a.destination[0] != 'L') {
+      track.validPath = FALSE;
    } else {
       track.prevCollumn = 5;
       track.prevRow = 0;
 
-      if (a->destination[0] == 'R') {
+      if (a.destination[0] == 'R') {
          track.currCollumn = (track.prevCollumn - 1);
          track.currRow = (track.prevRow + 1);
-      } else if (a->destination[0] == 'L') {
+      } else if (a.destination[0] == 'L') {
          track.currCollumn = (track.prevCollumn + 1);
          track.currRow = (track.prevRow);
       }
     }
 
       int i = 1;
-      while (a->destination[i] != NULL && track.validPath == TRUE) {
+      while ((a.destination[i] == 'R' ||
+               a.destination[i] == 'L' ||
+                a.destination[i] == 'B') && 
+              track.validPath == TRUE) {
          if (track.currCollumn > 11 ||  track.currCollumn < 0  ||
              track.currRow > 10 || track.currRow < 0) {
              
             track.validPath = FALSE;
 
-         } else if (a->destination[i] == 'R') {
+         } else if (a.destination[i] == 'R') {
             
             if ((track.currCollumn - 1) == (track.prevCollumn) 
-	        && (track.currRow - 1) == (track.prevRow)) {
-	
+            && (track.currRow - 1) == (track.prevRow)) {
+    
                track.prevCollumn = track.currCollumn;
                track.prevRow = track.currRow;
-               track.currCollumn = currCollumn - 1;
+               track.currCollumn = track.currCollumn - 1;
                track.currRow = track.currRow + 1;
 
             } else if ((track.currCollumn + 1) == (track.prevCollumn) 
-	                    && (track.currRow) == (track.prevRow)) {
-	          //execute movement
+                        && (track.currRow) == (track.prevRow)) {
+              //execute movement
                track.prevCollumn = track.currCollumn;
                track.prevRow= track.currRow;
                track.currCollumn = track.currCollumn - 1;
                track.currRow = track.currRow - 1;
 
             } else if ((track.currCollumn - 1) == (track.prevCollumn) 
-	                   && (track.currRow + 1) == (track.prevRow)) {
-	                   //execute movement
-	           track.prevCollumn = track.currCollumn;
+                       && (track.currRow + 1) == (track.prevRow)) {
+                       //execute movement
+               track.prevCollumn = track.currCollumn;
                track.prevRow = track.currRow;
                track.currCollumn++;
 
 
             } else if ((track.currCollumn + 1) == (track.prevCollumn) 
-	                   && (track.currRow - 1) == (track.prevRow)) {
-	          //execute movement
-	          track.prevCollumn = track.currCollumn;
+                       && (track.currRow - 1) == (track.prevRow)) {
+              //execute movement
+              track.prevCollumn = track.currCollumn;
               track.prevRow = track.currRow;
               track.currCollumn--;
 
 
             } else if ((track.currCollumn - 1) == (track.prevCollumn) 
-	                   && (track.currRow) == (track.prevRow)) {
-	           //execute movement
-	           track.prevCollumn = track.currCollumn;
+                       && (track.currRow) == (track.prevRow)) {
+               //execute movement
+               track.prevCollumn = track.currCollumn;
                track.prevRow = track.currRow;
                track.currCollumn++;
                track.currRow++;
 
 
             } else if ((track.currCollumn + 1) == (track.prevCollumn) 
-	                   && (track.currRow + 1) == (track.prevRow)) {
-	           //execute movement
-	           track.prevCollumn = track.currCollumn;
+                       && (track.currRow + 1) == (track.prevRow)) {
+               //execute movement
+               track.prevCollumn = track.currCollumn;
                track.prevRow = track.currRow;
                track.currCollumn++;
                track.currRow--;
             }
 
-         } else if (a->destination[i] == 'L') {
+         } else if (a.destination[i] == 'L') {
                
             if ((track.currCollumn - 1) == (track.prevCollumn) 
-	            && (track.currRow - 1) == (track.prevRow)) {
-	
+                && (track.currRow - 1) == (track.prevRow)) {
+    
                track.prevCollumn = track.currCollumn;
                track.prevRow = track.currRow;
                track.currCollumn++;
 
             } else if ((track.currCollumn + 1) == (track.prevCollumn) 
-	                    && (track.currRow) == (track.prevRow)) {
-	          //execute movement
+                        && (track.currRow) == (track.prevRow)) {
+              //execute movement
                track.prevCollumn = track.currCollumn;
                track.prevRow = track.currRow;
                track.currCollumn--;
                track.currRow++;
 
             } else if ((track.currCollumn - 1) == (track.prevCollumn) 
-	                   && (track.currRow + 1) == (track.prevRow)) {
-	                   //execute movement
-	           track.prevCollumn = track.currCollumn;
+                       && (track.currRow + 1) == (track.prevRow)) {
+                       //execute movement
+               track.prevCollumn = track.currCollumn;
                track.prevCollumn = track.currRow;
                track.currCollumn--;
                track.currRow--;
 
 
             } else if ((track.currCollumn + 1) == (track.prevCollumn) 
-	                   && (track.currRow - 1) == (track.prevRow)) {
-	          //execute movement
-	          track.prevCollumn = track.currCollumn;
+                       && (track.currRow - 1) == (track.prevRow)) {
+              //execute movement
+              track.prevCollumn = track.currCollumn;
               track.prevRow = track.currRow;
               track.currCollumn++;
               track.currRow++;
 
 
             } else if ((track.currCollumn - 1) == (track.prevCollumn ) 
-	                   && (track.currRow) == (track.prevRow)) {
-	           //execute movement
-	           track.prevCollumn = track.currCollumn;
+                       && (track.currRow) == (track.prevRow)) {
+               //execute movement
+               track.prevCollumn = track.currCollumn;
                track.prevRow = track.currRow;
                track.currCollumn++;
                track.currRow--;
 
 
             } else if ((track.currCollumn + 1) == (track.prevCollumn) 
-	                   && (track.currRow + 1) == (track.prevRow)) {
-	           //execute movement
-	           track.prevCollumn = track.currCollumn;
+                       && (track.currRow + 1) == (track.prevRow)) {
+               //execute movement
+               track.prevCollumn = track.currCollumn;
                track.prevRow = track.currRow;
                track.currCollumn--;
                track.currRow++;
@@ -153,7 +156,7 @@ int isLegalAction (Game g, action a) {
             i++;
          }
 
-    int C;
+    int C = track.currCollumn;
     int R = track.currRow;
 
     if (track.currCollumn == 0 || track.currCollumn == 1) {
@@ -169,171 +172,168 @@ int isLegalAction (Game g, action a) {
     } else if (track.currCollumn == 10 || track.currCollumn == 11) {
        C = 5; 
     } else {
-    	track.validPath = FALSE;
+        track.validPath = FALSE;
     }
 
-    int C = track.currCollumn;
-    int R = track.currRow;
-
-   if (g->currentTurn == -1) {
+   if (g->whoseTurn == -1) {
       isLegal= FALSE;
-    } else if (a->actionCode == PASS) {
+    } else if (a.actionCode == PASS) {
       isLegal = TRUE;
-    } else if (a->actionCode == BUILD_CAMPUS) {
-   	   //campus is not adjacent to other campus
+    } else if (a.actionCode == BUILD_CAMPUS) {
+       //campus is not adjacent to other campus
        int validCampus = FALSE;
        
        if (track.prevCollumn == (track.currCollumn - 1) &&
-       	   track.prevRow == (track.currRow - 1)) {
+           track.prevRow == (track.currRow - 1)) {
            
            if (g->boardVertices[C][R-1] == 0 &&
-           	   g->boardVertices[C+1][R] == 0 &&
-           	   g->boardVertices[C][R+1] == 0) {
+               g->boardVertices[C+1][R] == 0 &&
+               g->boardVertices[C][R+1] == 0) {
 
-           	   validCampus == TRUE;
+               validCampus = TRUE;
            }
 
        } else if (track.prevCollumn == (track.currCollumn + 1) &&
-       	   track.prevRow == (track.currRow)) {
+           track.prevRow == (track.currRow)) {
 
-       	   if (g->boardVertices[C][R-1] == 0 &&
-           	   g->boardVertices[C+1][R] == 0 &&
-           	   g->boardVertices[C][R+1] == 0) {
+           if (g->boardVertices[C][R-1] == 0 &&
+               g->boardVertices[C+1][R] == 0 &&
+               g->boardVertices[C][R+1] == 0) {
 
-           	   validCampus == TRUE;
+               validCampus = TRUE;
            }
            
        } else if (track.prevCollumn == (track.currCollumn - 1) &&
-       	   track.prevRow == (track.currRow + 1)) {
+           track.prevRow == (track.currRow + 1)) {
 
            if (g->boardVertices[C][R-1] == 0 &&
-           	   g->boardVertices[C+1][R] == 0 &&
-           	   g->boardVertices[C][R+1] == 0) {
+               g->boardVertices[C+1][R] == 0 &&
+               g->boardVertices[C][R+1] == 0) {
 
-           	   validCampus == TRUE;
+               validCampus = TRUE;
            }    
 
        } else if (track.prevCollumn == (track.currCollumn + 1) &&
-       	   track.prevRow == (track.currRow - 1)) {
+           track.prevRow == (track.currRow - 1)) {
            
            if (g->boardVertices[C][R-1] == 0 &&
-           	   g->boardVertices[C-1][R] == 0 &&
-           	   g->boardVertices[C][R+1] == 0) {
+               g->boardVertices[C-1][R] == 0 &&
+               g->boardVertices[C][R+1] == 0) {
 
-           	   validCampus == TRUE;
+               validCampus = TRUE;
            }
 
        } else if (track.prevCollumn == (track.currCollumn - 1) &&
-       	   track.prevRow == (track.currRow)) {
+           track.prevRow == (track.currRow)) {
 
            if (g->boardVertices[C][R-1] == 0 &&
-           	   g->boardVertices[C-1][R] == 0 &&
-           	   g->boardVertices[C][R+1] == 0) {
+               g->boardVertices[C-1][R] == 0 &&
+               g->boardVertices[C][R+1] == 0) {
 
-           	   validCampus == TRUE;
+               validCampus = TRUE;
            }
 
        } else if (track.prevCollumn == (track.currCollumn + 1) &&
-       	   track.prevRow == (track.currRow + 1)) {
+           track.prevRow == (track.currRow + 1)) {
            
            if (g->boardVertices[C][R-1] == 0 &&
-           	   g->boardVertices[C-1][R] == 0 &&
-           	   g->boardVertices[C][R+1] == 0) {
+               g->boardVertices[C-1][R] == 0 &&
+               g->boardVertices[C][R+1] == 0) {
 
-           	   validCampus == TRUE;
+               validCampus = TRUE;
            }
 
        }
 
-       if (boardVertices[C][R] != g->whoseTurn) {
+       if (g->boardVertices[C][R] != g->whoseTurn) {
           validCampus = FALSE;
        }
 
-   	   //campus is on arc belonging to player
-   	   int requiredBPS = 1;
-   	   int requiredBQNSs = 1;
-   	   int requiredMJ = 1;
-   	   int requiredMTV = 1;
+       //campus is on arc belonging to player
+       int requiredBPS = 1;
+       int requiredBQNs = 1;
+       int requiredMJ = 1;
+       int requiredMTV = 1;
 
-   	   if (g->University[g->whoseTurn]->MJs >= requiredMJ
-       && g->University[g->whoseTurn]->MTVs >= requiredMTV
-       && g->University[g->whoseTurn]->BQNs >= requiredBQNs
-       && g->University[g->whoseTurn]->BPSs >= requiredPBS) {
+       if (g->University[g->whoseTurn].MJs >= requiredMJ
+       && g->University[g->whoseTurn].MTVs >= requiredMTV
+       && g->University[g->whoseTurn].BQNs >= requiredBQNs
+       && g->University[g->whoseTurn].BPSs >= requiredBPS) {
           if (validCampus == TRUE) {
             isLegal = TRUE;
           }
        }
        
        if (g->boardVertices[C][R] == 0 &&
-       	   g->boardVertices) {
+           g->boardVertices) {
 
        }
 
-   } else if (a->actionCode == BUILD_GO8) {
+   } else if (a.actionCode == BUILD_GO8) {
       int requiredMJ = 2;
       int requiredMMONEYS = 3;
 
-      if (g->University[g->whoseTurn]->MJs >= requiredMJ &&
-          g->University[g->whoseTurn]->MMONEYs >= requiredMMONEYS) {
+      if (g->University[g->whoseTurn].MJs >= requiredMJ &&
+          g->University[g->whoseTurn].MMONEYs >= requiredMMONEYS) {
 
          if (g->boardVertices[C][R] == g->whoseTurn &&
-         	 g->University[g->whoseTurn]->GO8s <= 8) {
+             g->University[g->whoseTurn].GO8s <= 8) {
             isLegal = TRUE;
          }
       }
-   } else if (a->actionCode == OBTAIN_ARC) {
+   } else if (a.actionCode == OBTAIN_ARC) {
       //check path is valid (not occupied by another arc)
       //not connected to other campus arc
       int requiredBQN = 1;
       int requiredBPS = 1;
 
-      if (g->University[g->whoseTurn]->MJs >= requiredBQN &&
-          g->University[g->whoseTurn]->MMONEYs >= requiredBPS) {
+      if (g->University[g->whoseTurn].MJs >= requiredBQN &&
+          g->University[g->whoseTurn].MMONEYs >= requiredBPS) {
          isLegal = TRUE;
       }
 
 
-   } else if (a->actionCode == START_SPINOFF) {
+   } else if (a.actionCode == START_SPINOFF) {
       int requiredMTV = 1;
-      int requiredMONEY = 1;
+      int requiredMMONEYS = 1;
       int requiredMJ = 1;
 
-      if (g->University[g->whoseTurn]->MJs >= requiredMJ &&
-          g->University[g->whoseTurn]->MMONEYs >= requiredMMONEYS &&
-          g->University[g->whoseTurn]->MTVs >= requiredMTV) {
+      if (g->University[g->whoseTurn].MJs >= requiredMJ &&
+          g->University[g->whoseTurn].MMONEYs >= requiredMMONEYS &&
+          g->University[g->whoseTurn].MTVs >= requiredMTV) {
       
          isLegal = TRUE;
       }
 
-   } else if (a->actionCode == OBTAIN_PUBLICATION) {
+   } else if (a.actionCode == OBTAIN_PUBLICATION) {
       isLegal = FALSE;
-   } else if (a->actionCode == OBTAIN_IP_PATENT) {
+   } else if (a.actionCode == OBTAIN_IP_PATENT) {
       isLegal = FALSE;
-   } else if (a->actionCode == RETRAIN_STUDENTS) {
+   } else if (a.actionCode == RETRAIN_STUDENTS) {
       //check number of students is enough
-      int studentNumber;
+      int studentNumber = 0;
       
-      if (a->disciplineFrom == STUDENT_THD) {
+      if (a.disciplineFrom == STUDENT_THD) {
          isLegal = FALSE;
          studentNumber = FALSE;
-      } else if (a->disciplineFrom == STUDENT_BPS) {
+      } else if (a.disciplineFrom == STUDENT_BPS) {
          studentNumber = g->University[g->whoseTurn].BPSs;
-      } else if (a->disciplineFrom == STUDENT_BQN) {
-      	 studentNumber = g->University[g->whoseTurn].BQNs;
-      } else if (a->disciplineFrom == STUDENT_MJ) {
-      	 studentNumber = g->University[g->whoseTurn].MJs;
-      }else if (a->disciplineFrom == STUDENT_MTV ) {
-      	 studentNumber = g->University[g->whoseTurn].MTVs;
-      } else if (a->disciplineFrom == STUDENT_MMONEY) {
-      	 studentNumber = g->University[g->whoseTurn].MMONEYs;
+      } else if (a.disciplineFrom == STUDENT_BQN) {
+         studentNumber = g->University[g->whoseTurn].BQNs;
+      } else if (a.disciplineFrom == STUDENT_MJ) {
+         studentNumber = g->University[g->whoseTurn].MJs;
+      }else if (a.disciplineFrom == STUDENT_MTV ) {
+         studentNumber = g->University[g->whoseTurn].MTVs;
+      } else if (a.disciplineFrom == STUDENT_MMONEY) {
+         studentNumber = g->University[g->whoseTurn].MMONEYs;
       }
       
 
-      if (a->disciplineFrom != STUDENT_THD && studentNumber >= 3 && ) {
+      if (a.disciplineFrom != STUDENT_THD && studentNumber >= 3) {
          isLegal = TRUE;
       }
 
    }
-
+   }
    return isLegal;
 }
