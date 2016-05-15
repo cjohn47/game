@@ -529,8 +529,8 @@ int isLegalAction (Game g, action a) {
                track.currCollumn--;
                track.currRow++;
             }
-
-            i++;
+           }
+           i++;
          }
 
     int C = track.currCollumn;
@@ -710,7 +710,6 @@ int isLegalAction (Game g, action a) {
          isLegal = TRUE;
       }
 
-   }
    }
    return isLegal;
 }
