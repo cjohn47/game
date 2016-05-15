@@ -714,19 +714,15 @@ int isLegalAction (Game g, action a) {
    return isLegal;
 }
 
-int getKPIpoints (Game g, int player){
-    int university = -1;
-    int i = 0;
-    
-    if (i<NUM_UNIS) {
-        return g-> University[i] . KPIs
-    }
-    i++
+int getKPIpoints (Game g, int player) {
+    int KPI = g->University[player -1].KPIs;
+    return KPI;
 }
 
 
 int getARCs (Game g, int player){
-        return g-> University[player - 1] . ARCGrants
+   int ARCs = g->University[player-1].ARCGrants;
+   return ARCs;
 }
 
 int getARCs (Game g, int player);
@@ -738,8 +734,8 @@ int getCampuses (Game g, int player);
 int getIPs (Game g, int player);
 
 int getPublications (Game g, int player) {
-
-        return (g-> University[player-1] . Patents + g-> University[player-1].Papers)
+  int pubs = g->University[player-1].Patents + g->University[player-1].Papers;;
+  return pubs;
 }
 int getStudents(Game g, int player, int studentID){
     int numStudents = FAILED;
