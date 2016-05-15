@@ -416,7 +416,10 @@ int isLegalAction (Game g, action a) {
     }
 
       int i = 1;
-      while (a.destination[i] != '\0' && track.validPath == TRUE) {
+      while ((a.destination[i] == 'R' ||
+               a.destination[i] == 'L' ||
+                a.destination[i] == 'B') && 
+              track.validPath == TRUE) {
          if (track.currCollumn > 11 ||  track.currCollumn < 0  ||
              track.currRow > 10 || track.currRow < 0) {
              
@@ -530,7 +533,7 @@ int isLegalAction (Game g, action a) {
             i++;
          }
 
-    int C;
+    int C = track.currCollumn;
     int R = track.currRow;
 
     if (track.currCollumn == 0 || track.currCollumn == 1) {
@@ -549,10 +552,7 @@ int isLegalAction (Game g, action a) {
         track.validPath = FALSE;
     }
 
-    int C = track.currCollumn;
-    int R = track.currRow;
-
-   if (g->currentTurn == -1) {
+   if (g->whoseTurn == -1) {
       isLegal= FALSE;
     } else if (a.actionCode == PASS) {
       isLegal = TRUE;
@@ -567,7 +567,7 @@ int isLegalAction (Game g, action a) {
                g->boardVertices[C+1][R] == 0 &&
                g->boardVertices[C][R+1] == 0) {
 
-               validCampus == TRUE;
+               validCampus = TRUE;
            }
 
        } else if (track.prevCollumn == (track.currCollumn + 1) &&
@@ -577,7 +577,7 @@ int isLegalAction (Game g, action a) {
                g->boardVertices[C+1][R] == 0 &&
                g->boardVertices[C][R+1] == 0) {
 
-               validCampus == TRUE;
+               validCampus = TRUE;
            }
            
        } else if (track.prevCollumn == (track.currCollumn - 1) &&
@@ -587,7 +587,7 @@ int isLegalAction (Game g, action a) {
                g->boardVertices[C+1][R] == 0 &&
                g->boardVertices[C][R+1] == 0) {
 
-               validCampus == TRUE;
+               validCampus = TRUE;
            }    
 
        } else if (track.prevCollumn == (track.currCollumn + 1) &&
@@ -597,7 +597,7 @@ int isLegalAction (Game g, action a) {
                g->boardVertices[C-1][R] == 0 &&
                g->boardVertices[C][R+1] == 0) {
 
-               validCampus == TRUE;
+               validCampus = TRUE;
            }
 
        } else if (track.prevCollumn == (track.currCollumn - 1) &&
@@ -607,7 +607,7 @@ int isLegalAction (Game g, action a) {
                g->boardVertices[C-1][R] == 0 &&
                g->boardVertices[C][R+1] == 0) {
 
-               validCampus == TRUE;
+               validCampus = TRUE;
            }
 
        } else if (track.prevCollumn == (track.currCollumn + 1) &&
@@ -617,25 +617,25 @@ int isLegalAction (Game g, action a) {
                g->boardVertices[C-1][R] == 0 &&
                g->boardVertices[C][R+1] == 0) {
 
-               validCampus == TRUE;
+               validCampus = TRUE;
            }
 
        }
 
-       if (boardVertices[C][R] != g->whoseTurn) {
+       if (g->boardVertices[C][R] != g->whoseTurn) {
           validCampus = FALSE;
        }
 
        //campus is on arc belonging to player
        int requiredBPS = 1;
-       int requiredBQNSs = 1;
+       int requiredBQNs = 1;
        int requiredMJ = 1;
        int requiredMTV = 1;
 
-       if (g->University[g->whoseTurn]->MJs >= requiredMJ
-       && g->University[g->whoseTurn]->MTVs >= requiredMTV
-       && g->University[g->whoseTurn]->BQNs >= requiredBQNs
-       && g->University[g->whoseTurn]->BPSs >= requiredPBS) {
+       if (g->University[g->whoseTurn].MJs >= requiredMJ
+       && g->University[g->whoseTurn].MTVs >= requiredMTV
+       && g->University[g->whoseTurn].BQNs >= requiredBQNs
+       && g->University[g->whoseTurn].BPSs >= requiredBPS) {
           if (validCampus == TRUE) {
             isLegal = TRUE;
           }
@@ -650,11 +650,11 @@ int isLegalAction (Game g, action a) {
       int requiredMJ = 2;
       int requiredMMONEYS = 3;
 
-      if (g->University[g->whoseTurn]->MJs >= requiredMJ &&
-          g->University[g->whoseTurn]->MMONEYs >= requiredMMONEYS) {
+      if (g->University[g->whoseTurn].MJs >= requiredMJ &&
+          g->University[g->whoseTurn].MMONEYs >= requiredMMONEYS) {
 
          if (g->boardVertices[C][R] == g->whoseTurn &&
-             g->University[g->whoseTurn]->GO8s <= 8) {
+             g->University[g->whoseTurn].GO8s <= 8) {
             isLegal = TRUE;
          }
       }
@@ -664,20 +664,20 @@ int isLegalAction (Game g, action a) {
       int requiredBQN = 1;
       int requiredBPS = 1;
 
-      if (g->University[g->whoseTurn]->MJs >= requiredBQN &&
-          g->University[g->whoseTurn]->MMONEYs >= requiredBPS) {
+      if (g->University[g->whoseTurn].MJs >= requiredBQN &&
+          g->University[g->whoseTurn].MMONEYs >= requiredBPS) {
          isLegal = TRUE;
       }
 
 
    } else if (a.actionCode == START_SPINOFF) {
       int requiredMTV = 1;
-      int requiredMONEY = 1;
+      int requiredMMONEYS = 1;
       int requiredMJ = 1;
 
-      if (g->University[g->whoseTurn]->MJs >= requiredMJ &&
-          g->University[g->whoseTurn]->MMONEYs >= requiredMMONEYS &&
-          g->University[g->whoseTurn]->MTVs >= requiredMTV) {
+      if (g->University[g->whoseTurn].MJs >= requiredMJ &&
+          g->University[g->whoseTurn].MMONEYs >= requiredMMONEYS &&
+          g->University[g->whoseTurn].MTVs >= requiredMTV) {
       
          isLegal = TRUE;
       }
@@ -688,7 +688,7 @@ int isLegalAction (Game g, action a) {
       isLegal = FALSE;
    } else if (a.actionCode == RETRAIN_STUDENTS) {
       //check number of students is enough
-      int studentNumber;
+      int studentNumber = 0;
       
       if (a.disciplineFrom == STUDENT_THD) {
          isLegal = FALSE;
@@ -706,14 +706,13 @@ int isLegalAction (Game g, action a) {
       }
       
 
-      if (a.disciplineFrom != STUDENT_THD && studentNumber >= 3 && ) {
+      if (a.disciplineFrom != STUDENT_THD && studentNumber >= 3) {
          isLegal = TRUE;
       }
 
    }
-
+   }
    return isLegal;
-  }
 }
 
 int getKPIpoints (Game g, int player){
