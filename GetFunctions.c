@@ -57,8 +57,8 @@ int main(int argc, const char * argv[]) {
         i++;
     }
     return university;
-    }
 }
+
 
  int getTurnNumber (Game g)
 {
@@ -80,82 +80,55 @@ int getDiceValue (Game g, int regionID)
  
 int getCampuses(Game g, int player)
 {
-    int university = -1;
-    int i = 0;
     
-    if (i<NUM_UNIS) {
-        return g-> university[i] . Campuses
-    }
-    i++
+    return g-> university[player] . Campuses;
 }
 
  
  
 int getKPIpoints (Game g, int player){
-    int university = -1;
-    int i = 0;
-    
-    if (i<NUM_UNIS) {
-        return g-> university[i] . KPIs
-    }
-    i++
+   
+    return g-> university[player] . KPIs;
 }
 
  
  
 int getARCs (Game g, int player){
-    int university = -1;
-    int i = 0;
-    
-    if (i<NUM_UNIS) {
-        return g-> university[i] . ARCGrants
-    }
-    i++
+ 
+        return g-> university[player] . ARCGrants;
+ 
 }
 
  
  
 int getPublications (Game g, int player){
-    int university = -1;
-    int i = 0;
-    
-    if (i<NUM_UNIS) {
-        return (g-> university[i] . Patents + g-> university[i].Papers)
-    }
-    i++
+   
+        return (g-> university[player] . Patents + g-> university[player].Papers);
+
 }
 
+
 int getGO8s (Game g, int player){
-    int university = -1;
-    int i = 0;
-    
-    if (i<NUM_UNIS) {
-        return g-> university[i] . GO8s;
-    }
-    i++
+  
+        return g-> university[player] . GO8s;
+ 
 }
 
 
 int getDiscipline (Game g, int regionID){
-    int university = -1;
-    int i = 0;
-    
-    if (i<NUM_UNIS) {
+   
         return //where is the discipline
-    }
-    i++
+ 
 }
  
 
 int getIPs (Game g, int player){
-    int university = -1;
-    int i = 0;
-    
-    if (i<NUM_UNIS) {
-        return (g-> university[i] . THDs + g-> university[i].BPSs + g-> university[i].BQNs + g-> university[i].MJs + g-> university[i].MTVS);
-    }
-    i++
+
+        return (g-> university[player] . THDs + g-> university[player].BPSs + g-> university[player].BQNs + g-> university[player].MJs + g-> university[player].MTVS);
+ 
 }
+
+
 */
 
 
