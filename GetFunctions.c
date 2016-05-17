@@ -124,6 +124,38 @@ int getPublications (Game g, int player){
     }
     i++
 }
+
+int getGO8s (Game g, int player){
+    int university = -1;
+    int i = 0;
+    
+    if (i<NUM_UNIS) {
+        return g-> university[i] . GO8s;
+    }
+    i++
+}
+
+
+int getDiscipline (Game g, int regionID){
+    int university = -1;
+    int i = 0;
+    
+    if (i<NUM_UNIS) {
+        return //where is the discipline
+    }
+    i++
+}
+ 
+
+int getIPs (Game g, int player){
+    int university = -1;
+    int i = 0;
+    
+    if (i<NUM_UNIS) {
+        return (g-> university[i] . THDs + g-> university[i].BPSs + g-> university[i].BQNs + g-> university[i].MJs + g-> university[i].MTVS);
+    }
+    i++
+}
 */
 
 
