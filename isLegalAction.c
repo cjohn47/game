@@ -152,6 +152,16 @@ int isLegalAction (Game g, action a) {
                track.currCollumn--;
                track.currRow++;
             }
+           } else if (a.destination[i] == 'B') {
+              int tempCollumn = track.currCollumn;
+              int tempRow = track.currRow;
+              
+              track.currCollumn = track.prevCollumn;
+              track.currRow = track.prevRow;
+              
+              track.prevCollumn = tempCollumn;
+              track.prevRow = tempRow;
+            }
 
             i++;
          }
