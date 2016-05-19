@@ -481,7 +481,7 @@ int isLegalAction (Game g, action a) {
                track.currRow--;
             }
 
-         } else if (a.destination[i] == 'L') {
+          } else if (a.destination[i] == 'L') {
                
             if ((track.currCollumn - 1) == (track.prevCollumn) 
                 && (track.currRow - 1) == (track.prevRow)) {
@@ -533,10 +533,11 @@ int isLegalAction (Game g, action a) {
                track.currCollumn--;
                track.currRow++;
             }
-           }
-           i++;
-         }
+          }
+          i++;
+        } 
 
+    //converting current vertex to form used in game struct
     int C = track.currCollumn;
     int R = track.currRow;
 
@@ -555,15 +556,37 @@ int isLegalAction (Game g, action a) {
     } else {
         track.validPath = FALSE;
     }
+   
+    //converting previous vertex to form used in struct
+    int CP = track.prevCollumn;
+    int RP = track.prevRow;
 
+    if (track.currCollumn == 0 || track.currCollumn == 1) {
+       CP = 0;
+    } else if (track.currCollumn == 2 || track.currCollumn == 3) {
+       CP = 1;
+    } else if (track.currCollumn == 4 || track.currCollumn == 5) {
+       CP = 2;
+    } else if (track.currCollumn == 6 || track.currCollumn == 7) {
+       CP = 3;
+    } else if (track.currCollumn == 8 || track.currCollumn == 9) {
+       CP = 4;
+    } else if (track.currCollumn == 10 || track.currCollumn == 11) {
+       CP = 5; 
+    } else {
+        track.validPath = FALSE;
+    }
+
+   //START OF ACTION CHECKS
    if (g->whoseTurn == -1) {
       isLegal= FALSE;
     } else if (a.actionCode == PASS) {
       isLegal = TRUE;
     } else if (a.actionCode == BUILD_CAMPUS) {
-       //campus is not adjacent to other campus
+       
        int validCampus = FALSE;
        
+       //checking no other campuses adjacent
        if (track.prevCollumn == (track.currCollumn - 1) &&
            track.prevRow == (track.currRow - 1)) {
            
@@ -623,53 +646,58 @@ int isLegalAction (Game g, action a) {
 
                validCampus = TRUE;
            }
+        }
 
-       }
-
-       if (g->boardVertices[C][R] != g->whoseTurn) {
+       //checking campus is built on arc belonging to player
+       //and that nothing is in the specified point
+       if (g->boardArcs[C][R] != g->whoseTurn &&
+           g->boardVertices[C][R] == NO_ONE) {
           validCampus = FALSE;
        }
-
-       //campus is on arc belonging to player
+       
+       //checking costs
        int requiredBPS = 1;
        int requiredBQNs = 1;
        int requiredMJ = 1;
        int requiredMTV = 1;
 
-       if (g->University[g->whoseTurn].MJs >= requiredMJ
-       && g->University[g->whoseTurn].MTVs >= requiredMTV
-       && g->University[g->whoseTurn].BQNs >= requiredBQNs
-       && g->University[g->whoseTurn].BPSs >= requiredBPS) {
+       if (g->University[g->whoseTurn-1].MJs >= requiredMJ
+       && g->University[g->whoseTurn-1].MTVs >= requiredMTV
+       && g->University[g->whoseTurn-1].BQNs >= requiredBQNs
+       && g->University[g->whoseTurn-1].BPSs >= requiredBPS) {
           if (validCampus == TRUE) {
             isLegal = TRUE;
           }
-       }
-       
-       if (g->boardVertices[C][R] == 0 &&
-           g->boardVertices) {
-
        }
 
    } else if (a.actionCode == BUILD_GO8) {
       int requiredMJ = 2;
       int requiredMMONEYS = 3;
 
-      if (g->University[g->whoseTurn].MJs >= requiredMJ &&
-          g->University[g->whoseTurn].MMONEYs >= requiredMMONEYS) {
+      if (g->University[g->whoseTurn-1].MJs >= requiredMJ &&
+          g->University[g->whoseTurn-1].MMONEYs >= requiredMMONEYS) {
 
          if (g->boardVertices[C][R] == g->whoseTurn &&
-             g->University[g->whoseTurn].GO8s <= 8) {
+             g->University[g->whoseTurn-1].GO8s <= 8) {
             isLegal = TRUE;
          }
       }
    } else if (a.actionCode == OBTAIN_ARC) {
+   
+      int validARC = FALSE;
       //check path is valid (not occupied by another arc)
-      //not connected to other campus arc
+      // and that the arc is connected to other arc
+      if (boardArcs[C][P] == NO_ONE && boardArcs[CP][RP] == g->whoseTurn) {
+         validARC = TRUE;
+      }
+
+      //checking costs
       int requiredBQN = 1;
       int requiredBPS = 1;
 
-      if (g->University[g->whoseTurn].MJs >= requiredBQN &&
-          g->University[g->whoseTurn].MMONEYs >= requiredBPS) {
+      if (g->University[g->whoseTurn-1].MJs >= requiredBQN &&
+          g->University[g->whoseTurn-1].MMONEYs >= requiredBPS &&
+          validARC == TRUE) {
          isLegal = TRUE;
       }
 
@@ -679,9 +707,9 @@ int isLegalAction (Game g, action a) {
       int requiredMMONEYS = 1;
       int requiredMJ = 1;
 
-      if (g->University[g->whoseTurn].MJs >= requiredMJ &&
-          g->University[g->whoseTurn].MMONEYs >= requiredMMONEYS &&
-          g->University[g->whoseTurn].MTVs >= requiredMTV) {
+      if (g->University[g->whoseTurn-1].MJs >= requiredMJ &&
+          g->University[g->whoseTurn-1].MMONEYs >= requiredMMONEYS &&
+          g->University[g->whoseTurn-1].MTVs >= requiredMTV) {
       
          isLegal = TRUE;
       }
@@ -698,15 +726,15 @@ int isLegalAction (Game g, action a) {
          isLegal = FALSE;
          studentNumber = FALSE;
       } else if (a.disciplineFrom == STUDENT_BPS) {
-         studentNumber = g->University[g->whoseTurn].BPSs;
+         studentNumber = g->University[g->whoseTurn-1].BPSs;
       } else if (a.disciplineFrom == STUDENT_BQN) {
-         studentNumber = g->University[g->whoseTurn].BQNs;
+         studentNumber = g->University[g->whoseTurn-1].BQNs;
       } else if (a.disciplineFrom == STUDENT_MJ) {
-         studentNumber = g->University[g->whoseTurn].MJs;
+         studentNumber = g->University[g->whoseTurn-1].MJs;
       }else if (a.disciplineFrom == STUDENT_MTV ) {
-         studentNumber = g->University[g->whoseTurn].MTVs;
+         studentNumber = g->University[g->whoseTurn-1].MTVs;
       } else if (a.disciplineFrom == STUDENT_MMONEY) {
-         studentNumber = g->University[g->whoseTurn].MMONEYs;
+         studentNumber = g->University[g->whoseTurn-1].MMONEYs;
       }
       
 
@@ -715,8 +743,10 @@ int isLegalAction (Game g, action a) {
       }
 
    }
+   
    return isLegal;
 }
+
 
 int getKPIpoints (Game g, int player) {
     int KPI = g->University[player -1].KPIs;
