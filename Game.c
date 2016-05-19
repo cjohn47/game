@@ -78,7 +78,7 @@ typedef struct _game {
     /*2 dimensional array of the
     //form [row][arc] conataining the contents of the arc.
     */
-    int boardArcs[MAX_COLUMNS][MAX_ARCS_PER_COLUMN];
+    //int boardArcs[MAX_COLUMNS][MAX_ARCS_PER_COLUMN];
     
     region bRegion;
 
