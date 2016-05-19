@@ -70,6 +70,10 @@ typedef struct _game {
     //
     */
     int boardVertices[MAX_COLUMNS][MAX_ROWS];
+    //Put this here to represent arcs
+    //is number from 0-3 that specifies if a point is part of an arc
+    //the number specifies which universies
+    int boardArcs[MAX_COLUMNS][MAX_ROWS];
     
     /*2 dimensional array of the
     //form [row][arc] conataining the contents of the arc.
